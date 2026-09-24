@@ -1,0 +1,32 @@
+{
+  "title": "Canada LNG Expansion: Lifecycle Emissions Model",
+  "description": "Open, reproducible model of the greenhouse gas emissions caused by Canada's liquefied natural gas export expansion. Covers every LNG asset in the register (operating, under construction, and proposed) on a per-asset, per-calendar-year lifecycle panel, with a carbon dioxide and methane split, territorial tagging (Canada, international marine bunkers, foreign), and global damages valued at Canada's official social cost of greenhouse gases. Headline results are the export chain. This deposit corresponds to the manuscript 'A Canadian Carbon Bomb? The potential lifetime emissions and economic damages of Canada's LNG export expansion.'",
+  "upload_type": "software",
+  "license": "cc-by-4.0",
+  "access_right": "open",
+  "language": "eng",
+  "version": "2026.09.24",
+  "publication_date": "2026-09-24",
+  "creators": [
+    {
+      "name": "Stretch, Freddie",
+      "affiliation": "Imperial College London",
+      "orcid": "0009-0002-1637-6275"
+    }
+  ],
+  "keywords": [
+    "liquefied natural gas",
+    "lifecycle emissions",
+    "committed emissions",
+    "methane",
+    "social cost of carbon",
+    "Canada"
+  ],
+  "related_identifiers": [
+    {
+      "identifier": "10.5281/zenodo.18158445",
+      "relation": "cites",
+      "scheme": "doi"
+    }
+  ]
+}

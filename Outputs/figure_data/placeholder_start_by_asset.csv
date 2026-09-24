@@ -1,0 +1,5 @@
+scenario,project_id,project_name,calc_group,chain,start_year,lifespan_years,start_was_placeholder,lifetime_mtco2e,lifetime_co2_only_mt,lifetime_ch4_derived_co2e_mt,lifetime_ch4_kt,capacity_mtpa,share_of_lifetime_pct,last_emitting_year
+measurement_central,marinvest_baie_comeau,"Kino Aski LNG (formerly Marinvest Energy, Baie-Comeau)",proposed,export,2030,40,True,1513.9537831578948,1461.5955330263157,52.35825013157896,1756.9882594489584,15.0,21.1236065723397,2069
+measurement_central,kanata_lng,Kanata LNG,proposed,export,2030,40,True,1220.1082079999999,1175.4883579999998,44.619850000000014,1497.3104026845642,12.0,17.023693885631946,2069
+measurement_central,fermeuse_energy_flng,Fermeuse Energy FLNG Terminal,proposed,export,2030,40,True,452.09983500000004,437.02984050000003,15.069994500000004,505.7045134228189,4.5,6.3079726423614995,2069
+measurement_central,summit_lake_pg_lng,Summit Lake PG LNG,proposed,export,2030,30,True,194.5139508,187.40049704999998,7.113453750000002,238.70650167785243,2.7,2.7139772793857593,2059

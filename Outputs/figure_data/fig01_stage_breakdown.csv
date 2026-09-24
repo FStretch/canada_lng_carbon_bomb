@@ -1,0 +1,7 @@
+stage,stage_label,lifetime_mtco2e,share_pct
+upstream_production,Upstream production,563.2261365951459,7.858474580299596
+pipeline_transport,Pipeline transport,150.46474407234942,2.0993758806576532
+liquefaction,Liquefaction,589.6591321754235,8.227283856631344
+shipping,Shipping,229.47319201118796,3.201749935082239
+regasification,Regasification,42.69945439890999,0.5957688309974424
+combustion,Combustion,5591.595218904879,78.01734691633173
