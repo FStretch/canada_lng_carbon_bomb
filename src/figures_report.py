@@ -91,7 +91,7 @@ TERRITORY_COLOR = {
     "FOR": SAGE,
 }
 LOCKED_STAGE_SHARE_PCT = {
-    "combustion": 78.0,
+    "combustion": 78.1,
     "liquefaction": 8.2,
     "upstream_production": 7.9,
     "shipping": 3.2,
@@ -217,7 +217,8 @@ def figure_1_stage_breakdown(
     ax.barh(y, plot["share_pct"], color=colors, height=0.65)
     ax.set_yticks(y, plot["stage_label"])
     ax.set_xlabel("Share of lifetime emissions (%)")
-    ax.set_title("Full build-out lifetime emissions by lifecycle stage")
+    # No burned-in title (removed 27 Sep 2026): the manuscript caption carries it.
+    # Was: "Full build-out lifetime emissions by lifecycle stage"
     _ygrid(ax)
     for i, r in enumerate(plot.itertuples()):
         ax.text(
@@ -299,7 +300,8 @@ def figure_2_territorial_split(
         left += r.share_pct
     ax.set_yticks([])
     ax.set_xlabel("Share of lifetime emissions (%)")
-    ax.set_title("Territorial attribution of lifetime emissions")
+    # No burned-in title (removed 27 Sep 2026): the manuscript caption carries it.
+    # Was: "Territorial attribution of lifetime emissions"
     ax.set_xlim(0, 100)
     handles = [
         plt.Rectangle((0, 0), 1, 1, color=TERRITORY_COLOR[code])
@@ -387,11 +389,19 @@ def figure_3_three_trajectories(
     )
     ax.set_xlabel("Year")
     ax.set_ylabel("Annual emissions (MtCO2e/yr)")
-    ax.set_title("Annual emissions by build-out scenario")
+    # No burned-in title (removed 27 Sep 2026): the manuscript caption carries it.
+    # Was: "Annual emissions by build-out scenario"
     ax.set_xlim(2025, 2069)
     ax.set_ylim(bottom=0)
     _ygrid(ax)
-    ax.legend(frameon=False, loc="upper left")
+    # Upper left now meets the committed-plus-advanced rise into the 2037 peak.
+    # Sit the legend in the open band under the full build-out's 2040s plateau.
+    ax.legend(
+        frameon=False,
+        loc="center left",
+        bbox_to_anchor=(0.42, 0.62),
+        borderaxespad=0.0,
+    )
     plateaus = {name: float(df[name].max()) for name in BUILD_OUTS}
     out = fig_dir / "fig03_three_trajectories.png"
     _save(fig, out)

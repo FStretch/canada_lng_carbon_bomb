@@ -13,10 +13,9 @@ construction and proposed. Headline results are the export chain.
 
 **Status.** Submission snapshot for the manuscript *A Canadian Carbon Bomb? The potential lifetime
 emissions and economic damages of Canada's LNG export expansion*, prepared for
-*Environmental Research Letters*. Headline results are locked to the 3 September 2026
-paper set (run 17:20 UTC). This release adds the licence and citation metadata; it does
-not change any locked figure. Cite the Zenodo DOI of the GitHub release, which is the
-archival copy.
+*Environmental Research Letters*. Headline results are locked to the 27 September 2026
+paper set (run 19:03 UTC). The lock includes the 27 September 2026 register and method
+update. Cite the Zenodo DOI of the GitHub release, which is the archival copy.
 
 **Reproduce the locked results.** Python 3.13.0, then `pip install -r requirements.txt`
 and `python build_results.py`.
@@ -28,19 +27,136 @@ Figure 2(a) is `Outputs/figures/fig01_stage_breakdown.png` and Figure 2(b) is
 `Outputs/paper_set_locked.csv`. One row per headline terminal is
 `Outputs/si_table_assets.csv`.
 
+## Register update, 27 September 2026
+
+Changes to `Inputs/Canada_LNG_Asset_Register.xlsx`, each sourced in the Asset Sources sheet.
+Rule adopted: where new data would move the figures, the latest published developer or
+regulator figure is used, with its source and link.
+
+| Asset | Change | Source |
+|---|---|---|
+| LNG Canada Phase 2 | No FID yet; status text refreshed; first LNG 2030 reconfirmed | [GEM wiki, 25 Sep 2026](https://www.gem.wiki/LNG_Canada_Terminal); [MPO](https://www.canada.ca/en/privy-council/major-projects-office/projects/national/lng-canada.html); [Northern View, 24 Sep 2026](https://thenorthernview.com/2026/09/24/lng-canada-phase-2-decision-could-come-as-early-as-october/) |
+| Ksi Lisims | First exports 2029 to 2032; offtake 4 to 8 mtpa; licence early-expiry clause; grid timing | [MPO (Uniper, 29 Jul 2026)](https://www.canada.ca/en/privy-council/major-projects-office/projects/national/ksi-lisims.html); [BC, 27 May 2026](https://news.gov.bc.ca/releases/2026ECS0025-000604); [NRCan, 15 Sep 2026](https://www.canada.ca/en/natural-resources-canada/news/2026/09/canadian-lng-project-signs-third-international-offtake-deal.html); [GEM wiki](https://www.gem.wiki/Ksi_Lisims_FLNG_Terminal); [BC, NCTL](https://news.gov.bc.ca/releases/2026PREM0034-001026) |
+| Fermeuse | Capacity 4.5 to 10 mtpa (developer statement); operating life 18 years, derived from the developer's 9.7 Tcf resource at 10 mtpa | [The Narwhal, 19 Mar 2026](https://thenarwhal.ca/lng-newfoundland-lessons-kitimat-bc/) |
+| Cedar | Capacity 3.3 to 3.75 mtpa (BC EAO amended certificate, July 2026, same equipment); Coastal GasLink demand updated to match | [BC EAO amendment application](https://projects.eao.gov.bc.ca/api/public/document/68caf0067a03b4002205daf9/download/Cedar%20LNG%20Accommodation%20+%20Capacity%20Amendment%20Application.pdf); [GIIGNL, 22 Jul 2026](https://www.giignl.org/news/cedar-lng-receives-approval-to-increase-project-capacity); [Canadian Vanguard](https://www.thecanadianvanguard.com/cedar-lng-secures-bc-regulatory-nod-to-expand-future-output-capacity/) |
+| Kino Aski | Feedgas basin now Western Canada (developer-stated); drive, cost and commercial notes | [Kino Aski LNG](https://kinoaskilng.ca/); [gasworld](https://www.gasworld.com/story/kino-aski-lng-targets-north-america-europe-energy-corridor/2257622.article/); [Federal prospectus, p. 8](https://cabinradio.ca/wp-content/uploads/2026/09/CanadaInvestmentSummit.pdf); [Energy Mix, 16 Sep 2026](https://www.theenergymix.com/kino-aski-lng-signs-tentative-deal-with-ukraine-state-fossil-as-opposition-rises-complications-abound/) |
+| Kanata | Indicative terms with Hanwha; pre-FEED; FID targeted early 2028 | [LNG Industry, 14 Sep 2026](https://www.lngindustry.com/floating-lng/14092026/kanata-clean-power-and-hanwha-ocean-to-launch-pre-feed-for-proposed-floating-lng-project/) |
+| Woodfibre | First exports 2028 to 2027 (in service targeted end-2027); GL-340 start deadline June 2030; 2.5 mtpa expansion noted, capacity unchanged | [LNG Journal, 16 Jul 2026](https://lngjournal.com/index.php/latest-news-mainmenu-47/item/116798-woodfibre-lng-on-track-to-complete-construction-by-late-2027); [Energetic City](https://energeticcity.ca/2025/08/29/export-licence-extension-for-woodfibre-lng-granted-by-energy-regulator/); [Federal prospectus, p. 10](https://cabinradio.ca/wp-content/uploads/2026/09/CanadaInvestmentSummit.pdf) |
+| Tilbury Phase 2 | BC certificate and federal decision, 21 Sep 2026; 2.5 mtpa confirmed as an addition | [IAAC](https://www.canada.ca/en/impact-assessment-agency/news/2026/09/major-milestone-completed.html); [Surrey Now-Leader](https://surreynowleader.com/2026/09/21/delta-lng-expansion-project-issued-b-c-environmental-assessment-certificate/) |
+| Tilbury Phase 1b | First exports 2028 to 2031 | [BC, 24 Jul 2026](https://news.gov.bc.ca/releases/2026ECS0043-000870) |
+| Tilbury Marine Jetty | Proponent named (Tilbury Jetty Limited Partnership) | [Tilbury Pacific](https://tilburypacific.ca/about-tilbury-pacific/) |
+| Kitimat LNG | Now owned by the Haisla Nation's yáqʷa Development Corporation; moved from inactive to watch (excluded from totals) | [yáqʷa, 17 Nov 2025](https://www.yaqwadevcorp.com/2025/11/18/yaq%CA%B7a-acquisition/); [BC EAO EPIC](https://projects.eao.gov.bc.ca/api/public/search?dataset=Project&keywords=Kitimat&pageNum=0&pageSize=100) |
+| Placentia Bay | EA registration 2177 still active | [NL registry](https://www.gov.nl.ca/ecc/env-assessment/projects-list/) |
+| Saint John | NRCan's 6.5 mtpa import capacity recorded against GEM's 7.5 | [NRCan](https://natural-resources.canada.ca/energy-sources/fossil-fuels/canadian-liquified-natural-gas-projects) |
+| Tamaska | Owner now Cryopeak Energy Solutions | [Cryopeak](https://www.cryopeak.com/) |
+| Northern Prince LNG (new) | Watch row: 6 mtpa developer claim, no site, filing or named buyer; only short-term CER export orders; may overlap Summit Lake | [Website](https://www.northernprincelng.com/about); [NeeStaNan](https://neestanan.ca/neestanan-and-lng-exports/); [BOE Report, 2024](https://boereport.com/2024/03/05/neestanan-signs-mou-with-northern-prince-lng/); [CER REGDOCS](https://apps.cer-rec.gc.ca/REGDOCS/Item/View/4459935) |
+| Port of Churchill Plus LNG (new) | Watch row, no capacity: floating LNG concept in Hudson Bay, no developer; federal 2030 target | [MPO](https://www.canada.ca/en/privy-council/major-projects-office/projects/other/referred/churchill-plus.html); [Federal prospectus, p. 40](https://cabinradio.ca/wp-content/uploads/2026/09/CanadaInvestmentSummit.pdf); [CBC, 15 Sep 2026](https://ca.news.yahoo.com/port-churchill-railway-improvements-cost-100000703.html); [Global News](https://globalnews.ca/news/11806964/federal-government-puts-timeline-in-place-for-port-of-churchill-project-kinew/) |
+| NeeStaNan Port Nelson (new) | Watch row, no capacity: feasibility study under a short-term CER export authorisation to June 2027 | [CBC](https://www.cbc.ca/1.7582120); [BOE Report, 2025](https://boereport.com/2025/07/02/neestanan-and-fox-lake-cree-nation-secure-federal-authorization-to-export-lng/) |
+| Project Northern Lights (new) | Domestic small-scale plant in Alberta, shovel-ready; no capacity published, so it enters no total | [Federal prospectus, p. 7](https://cabinradio.ca/wp-content/uploads/2026/09/CanadaInvestmentSummit.pdf) |
+
+**What the 27 September 2026 run changed.** Export capacity rose from 79.6 to 85.55 mtpa
+(under construction 5.4 to 5.85; proposed 60.2 to 65.7; early_proposed 34.2 to 39.7). The
+locks that moved were `EXPECTED_EXPORT_BY_CALC`, `EXPECTED_EXPORT_TOTAL`, `EXPECTED_EARLY_EXPORT`,
+`EXPECTED_LIFETIME_MT`, `EXPECTED_PEAK_MT`, `EXPECTED_BUILD_OUT` and `EXPECTED_PAPER_SET_SHA256`
+in `build_results.py`, and the combustion share in `LOCKED_STAGE_SHARE_PCT` in
+`src/figures_report.py` (78.0 to 78.1). The territorial shares are unchanged at one decimal
+(18.2 / 3.2 / 78.6).
+
+| build-out | lifetime CO2e Mt [MC p5, p95] | lifetime CO2-only Mt | peak | ECCC 2% damages C$bn, valued when caused [MC p5, p95] | NPV to 2025 |
+|---|---|---|---|---|---|
+| Committed (3) | 1,917.3 [1,890, 2,094] | 1,847.2 | 59.4 in 2030 | 769 [755, 830] | 539 |
+| Committed plus advanced (5) | 3,914.9 [3,817, 4,255] | 3,771.7 | 136.4 in 2037 | 1,620 [1,576, 1,742] | 1,088 |
+| Full build-out (9) | 7,390.3 [6,865, 8,284] | 7,124.7 | 253.4 in 2037 | 3,176 [2,899, 3,590] | 2,015 |
+
+At full build-out the CO2-only lifetime is 4.19% of the 170 GtCO2 remaining for 1.5°C, and the
+Monte Carlo median is 7,562.4 Mt.
+
+**Liquefaction drive, all gas against all electric** (`Outputs/figure_data/sens_liquefaction_drive.csv`,
+full build-out). The central case is every terminal on gas turbine drive (0.29). The
+sensitivity puts every headline terminal on electric drive:
+
+| case | liquefaction tCO2e/t | lifetime Mt | change | Canada-territorial Mt |
+|---|---|---|---|---|
+| All gas turbine (central) | 0.29 | 7,390.3 | none | 1,344.4 |
+| All electric, Pembina figure (Gorski and Lam 2023) | 0.15 | 7,096.7 | -293.6 (-4.0%) | 1,050.7 |
+| All electric, BC EAO grid-supply figure (best case) | 0.021 | 6,826.2 | -564.2 (-7.6%) | 780.2 |
+
+Every tonne of the change is in Canada, so the Canada-territorial total falls by 22% (Pembina
+figure) to 42% (best case), while the full lifecycle total falls by 4% to 8%. Sources: [Pembina Institute, *Squaring the Circle: State of LNG 2023*](https://www.pembina.org/reports/squaring-the-circle-state-of-lng-2023.pdf);
+[BC EAO, Ksi Lisims assessment report, pp. 847 to 848](https://iaac-aeic.gc.ca/050/documents/p82797/163192E.pdf). Both are facility intensities
+(the BC EAO figure includes marine sources), not the liquefaction stage alone, so the
+comparison with 0.29 is approximate.
+
+**Code changes made with this update.** (1) New register field
+`first_export_year_assumes_fid`. Where it is True the model does not add the five-year FID
+delay (`fid_delay_mid`) to a pre-FID asset, because its `first_export_year` is a developer
+date that already allows for the build after an FID. It is set for Ksi Lisims (first
+deliveries 2032 under the Uniper agreement) and Tilbury Phase 1b (in service 2031). Code:
+`_date_assumes_fid` and `_fid_delay_applies` in `src/model.py`, used by `src/trajectories.py`
+and `src/monte_carlo.py`. (2) The Monte Carlo year range now ends at the last year any draw
+can emit (sampled-life ceiling, held life, or licence stop) instead of start + 49 for every
+asset, which ran past the ECCC schedule's last year (2080) once Ksi Lisims moved to 2032. On
+the 3 September register both changes reproduce the locked Monte Carlo figures exactly.
+
+Method decisions of 27 September 2026, made after the register update:
+
+(3) **The FID delay moves a stated or derived life later instead of cutting it.** Where an
+asset's life is `project_life_years` with no licence end and no authorised term, the delay now
+shifts the whole life. Fermeuse runs its full 18 years (2035 to 2052, 506.9 Mt; was 13 years
+and 361 Mt) and Summit Lake its full 30 (2035 to 2064, 234.5 Mt; was 194.5 Mt). The 18 years
+are derived from the developer's 9.7 Tcf (275 bcm) Jeanne d'Arc resource
+([Energy Mix, 5 Sep 2025](https://www.theenergymix.com/lng-developer-announces-15b-project-off-newfoundland-says-carney-policy-changes-made-it-happen/)) at the developer's 10 mtpa
+([The Narwhal, 19 Mar 2026](https://thenarwhal.ca/lng-newfoundland-lessons-kitimat-bc/)), with liquefaction fuel netted:
+275 / (10 × 1.38 × 1.1055) = 18.0 years. The 30 years are the developer's own
+([BC EAO draft Initial Project Description, p. 10](https://www.projects.eao.gov.bc.ca/api/public/document/65cce8f768c392001b2d5692/download/Draft%20Initial%20Project%20Description.pdf): "The Project is expected to
+operate for 30 years"). Licence terms, licence end years and the 40-year default keep the delay
+inside the window as before. The Monte Carlo does the same draw by draw, so the operating years
+stay fixed whatever delay is drawn. Code: `_life_shifts_with_delay` and `_lifespan` in
+`src/model.py`; `life_shifts` in `src/monte_carlo.py`. Effect: +186.4 Mt at full build-out.
+
+(4) **Liquefaction is sampled in the Monte Carlo** on a triangle of 0.26 / 0.29 / 0.36, the
+range for gas-turbine plants in [Delphi Group (2013)](https://www2.gov.bc.ca/assets/gov/environment/climate-change/ind/lng/lng_emissions_benchmarking_-_march_2013.pdf): Sabine Pass 0.26 (p. 23,
+Figure 3) and Pluto LNG 0.36, a GE Frame 7EA gas-turbine plant (p. 14), in a benchmark of
+operating and proposed plants spanning 0.17 to 0.49. Emission Factors range_low moves from
+0.15 to 0.26 and range_high 0.36 is now cited. Electric drive stays outside this range on
+purpose. The central does not move; the Monte Carlo interval and median move slightly up.
+
+(5) **The drive sensitivity puts every terminal on electric drive** (`src/drive_sensitivity.py`),
+at 0.15 and at 0.021, against the all-gas central. It replaces the earlier two-asset version
+(Ksi Lisims and Cedar only). Results are in the table above.
+
+(6) **The Kino Aski United States supply case is dropped** from `src/feedgas_sensitivity.py`,
+because the developer now names Western Canadian gas ([Kino Aski LNG](https://kinoaskilng.ca/)).
+The two Western Canada pipeline-length cases (x3 and x5) stay.
+
+(7) **Figure titles removed** from figures 1, 2(a), 2(b) and 3 (`src/figures_report.py`,
+`src/loss_damage.py`), matching the manuscript, where the caption carries the title.
+
+(8) **Inputs workbook tidy.** The liquefaction low value in the Emission Factors text and the
+README sheet read 0.12 and now read correctly. The Scenarios `high_50yr` note now records that
+Bill C-15 made 50 years the legal maximum CER export licence term on 26 March 2026
+([Major Projects Office, LNG Canada](https://www.canada.ca/en/privy-council/major-projects-office/projects/national/lng-canada.html)). The `fid_delay_mid` note records rules (1) and
+(3). The stale fig08 pointer in `build_results.py` now points to the drive sensitivity.
+
+**Still to carry into the manuscript.** The locks, regenerated outputs and version metadata
+were updated with the 27 September 2026 run. The manuscript, SI and report still need these
+numbers. The manuscript's SI Monte Carlo table says liquefaction is "fixed at 0.29" and needs
+the 0.26 / 0.29 / 0.36 triangle instead. When LNG Canada Phase 2 takes its FID, set
+`fid_confirmed` on its row and the delay drops off automatically.
+
 ---
 
 ## What this produces
 
-**The paper set.** Locked 3 September 2026 (run 17:20 UTC). Central case, with the Monte
+**The paper set.** Locked 27 September 2026 (run 19:03 UTC). Central case, with the Monte
 Carlo 5th to 95th percentile as its interval (10,000 draws, seed 20260828). Central is the
 point estimate from the central factor values.
 
 | build-out | lifetime CO2e Mt | lifetime CO2-only Mt | peak | ECCC 2% damages C$bn, valued when caused | ECCC 2% damages C$bn, NPV to 2025 |
 |---|---|---|---|---|---|
-| Committed (operating + under construction, 3 assets) | **1,860.0** [1,827, 2,024] | **1,792.0** [1,743, 1,911] | **58.0** in 2030 [57, 63] | **745** [729, 801] | **524** |
-| Committed plus advanced (5 assets) | **3,786.4** [3,636, 4,096] | **3,648.0** [3,466, 3,871] | **135.1** in 2037 [133, 147] | **1,572** [1,509, 1,681] | **1,051** |
-| Full buildout (9 projects, 79.6 mtpa) | **7,167.1** [6,515, 8,089] | **6,909.5** [6,193, 7,665] | **235.9** in 2037 [232, 256] | **3,106** [2,764, 3,546] | **1,945** |
+| Committed (operating + under construction, 3 assets) | **1,917.3** [1,890, 2,094] | **1,847.2** [1,803, 1,979] | **59.4** in 2030 [58.5, 64.8] | **769** [755, 830] | **539** |
+| Committed plus advanced (5 assets) | **3,914.9** [3,817, 4,255] | **3,771.7** [3,643, 4,023] | **136.4** in 2037 [134.5, 149.0] | **1,620** [1,576, 1,742] | **1,088** |
+| Full buildout (9 projects, 85.55 mtpa) | **7,390.3** [6,865, 8,284] | **7,124.7** [6,539, 7,849] | **253.4** in 2037 [249.8, 276.4] | **3,176** [2,899, 3,590] | **2,015** |
 
 **How the headline is reported.** As the three-point ladder above, with the tier label on each
 figure; the single full-slate number is not fronted alone, since about three quarters of it has
@@ -53,7 +169,7 @@ damage when it is caused, in constant 2025 dollars: the loss-and-damage figure, 
 The NPV discounts the same stream to 2025 at the same 2%: the cost-benefit figure, and the
 aggregation Government of Canada regulatory guidance uses. Wherever one appears, so does the other.
 
-The Monte Carlo median sits above the central case (7,274.0 Mt at full buildout) because the
+The Monte Carlo median sits above the central case (7,562.4 Mt at full buildout) because the
 sampled stage triangles are right-skewed, shipping 0.05 / 0.12 / 0.31 especially. It is stated
 once, with that reason, and is not the reported figure. The upstream triangle high is the GWP20
 scenario factor (0.440), not Howarth 0.55.
@@ -62,28 +178,28 @@ At full buildout:
 
 | | |
 |---|---|
-| Headline annual (panel peak) | **235.9 MtCO2e** in 2037 |
-| life_average_annual_mt | **205.1 MtCO2e/yr** (not a calendar year) |
-| Lifetime emissions | **7,167.1 MtCO2e** (calendar panel 2025–2069) |
-| Lifetime, CO2 only | **6,909.5 MtCO2** (plus 8,645 kt CH4) |
-| Export capacity | 79.6 mtpa across nine projects |
-| Scope 1 and 2 | 37.3 Mt/yr, 18.2% |
-| Scope 3 | 167.8 Mt/yr, 81.8% |
+| Headline annual (panel peak) | **253.4 MtCO2e** in 2037 |
+| life_average_annual_mt | **222.3 MtCO2e/yr** (not a calendar year) |
+| Lifetime emissions | **7,390.3 MtCO2e** (calendar panel 2025–2069) |
+| Lifetime, CO2 only | **7,124.7 MtCO2** (plus 8,913 kt CH4) |
+| Export capacity | 85.55 mtpa across nine projects |
+| Scope 1 and 2 | 40.5 Mt/yr, 18.2% |
+| Scope 3 | 181.9 Mt/yr, 81.8% |
 
 Split by where the emissions are counted: **18.2% Canada, 3.2% international marine bunkers,
-78.6% foreign**. The CO2-only lifetime is 4.1% of the 170 GtCO2 remaining for 1.5°C.
+78.6% foreign**. The CO2-only lifetime is 4.2% of the 170 GtCO2 remaining for 1.5°C.
 
 Every figure in the paper-set table is locked as `EXPECTED_BUILD_OUT` in `build_results.py` and
 asserted on every run.
 
 Headline results include assets whose chain is in `headline_scope_chains` (export) and whose
 calc_group is in `headline_scope_calc_groups` (operating, under construction, proposed). Eight
-non-export assets totalling 242.9 MtCO2e stay in the register as a stated exclusion.
+non-export assets totalling 252.1 MtCO2e stay in the register as a stated exclusion.
 
 The published lifetime total is the sum of a per-asset, per-calendar-year panel from 2025
 through each asset's last emitting year (currently 2069). It is not duration × life-average.
-The headline annual figure is the panel peak (235.9 MtCO2e in 2037). `life_average_annual_mt`
-(205.1 MtCO2e/yr) is a life-average of utilisation over each facility's operating window,
+The headline annual figure is the panel peak (253.4 MtCO2e in 2037). `life_average_annual_mt`
+(222.3 MtCO2e/yr) is a life-average of utilisation over each facility's operating window,
 including start-up years; it is not a calendar year.
 
 These headlines are below the 9,298.1 Mt / 100.1 mtpa figures that included Discovery LNG as
@@ -120,8 +236,8 @@ src/
   benchmark_table.py                six-row boundary-aligned comparison to external estimates
   placeholder_sensitivity.py        first-export-year fill sensitivity (SI)
   lifespan_sensitivity.py           uniform 40-year life, no licence stop (SI)
-  feedgas_sensitivity.py            Kino Aski Western Canadian vs US supply (SI)
-  drive_sensitivity.py              BC EAO electric-drive liquefaction cases (SI)
+  feedgas_sensitivity.py            Kino Aski Western Canadian feedgas pipeline length (SI)
+  drive_sensitivity.py              every terminal on electric drive vs all gas (SI)
   si_table.py                       one row per headline asset for the SI
   figures_report.py                 manuscript figures and their CSV series
 build_results.py                    orchestrates a run, asserts every lock, writes the outputs
@@ -148,12 +264,22 @@ Reproducing a run, below.
 
 ### The asset register
 
-Eighteen assets in the calculation, drawn from Global Energy Monitor's Global Gas Infrastructure Tracker
+Nineteen assets in the calculation, drawn from Global Energy Monitor's Global Gas Infrastructure Tracker
 (LNG Terminals, September 2025), Natural Resources Canada's project list, and Canada Energy
 Regulator export licence records. Kanata LNG (June 2026) is added from proponent sources and is
 not in GEM. Discovery LNG is in GEM as cancelled; the register now matches. Port of Hamilton has
-no published capacity and is excluded from totals rather than estimated. Tilbury Marine Jetty
+no published capacity and is excluded from totals rather than estimated, as is Project Northern
+Lights (added 27 September 2026). Kitimat LNG, Northern Prince LNG and the Churchill and Port
+Nelson Hudson Bay concepts are watch rows, outside the calculation. Tilbury Marine Jetty
 has no lifecycle chain and is excluded, not zeroed.
+
+**Inclusion test for proposed projects.** A project enters the calculation as early_proposed
+only if it has at least one of: a regulatory filing (an environmental assessment registration,
+a project description or a CER licence application), a named counterparty (a buyer, partner or
+equipment supplier under a signed agreement) or a named site. A project that fails the test,
+or is shelved, is a **watch row** (`calc_group` = watch): it is recorded with its sources and
+excluded from every total, so it can be promoted when evidence appears. A project with no
+published capacity is excluded from totals whatever its status.
 
 Three rules govern the register:
 
@@ -162,9 +288,11 @@ Three rules govern the register:
   source field says so.
 - **Blank beats wrong.** Where a value is unknown the cell is empty and the source reads
   "not available". Assets without a capacity are excluded from all totals rather than estimated.
-- **Capacity is nameplate.** Where sources disagree the nameplate design figure is used and the
-  alternative recorded. Cedar LNG is the worked example: the proponent's own final investment
-  decision announcement states 3.3 mtpa, while NRCan and the CER publish 3.0.
+- **Capacity is the latest design figure.** Where sources disagree, the most recent design
+  capacity published by the developer or permitted by a regulator is used and the alternatives
+  are recorded. Cedar LNG is the worked example: its final investment decision announcement
+  stated 3.3 mtpa and NRCan and the CER publish 3.0, but the BC EAO's amended certificate of
+  July 2026 permits 3.75 mtpa from the same equipment, so the register carries 3.75.
 
 Assets carry two classifications. `tier` describes progress as an export project. `calc_group`
 describes simply whether the asset is running, being built, or proposed, and is what the model
@@ -210,14 +338,14 @@ total so a reader can use either.
 ### Emission factors
 
 Each stage carries a single central value in tonnes of CO2 equivalent per tonne of LNG. Low and
-high figures are recorded for reference but are not used to construct scenarios, because the stages
-are not correlated.
+high figures are not used to construct scenarios, because the stages are not correlated; they set
+the triangle each stage is sampled on in the Monte Carlo.
 
 | Stage | Central | Basis |
 |---|---|---|
 | Upstream production | 0.277 | Canada Energy Regulator British Columbia oil and gas emissions, net of the 0.074 pipeline stage, corrected for measured methane on the methane share; every step in the basis cell |
 | Pipeline transport | 0.074 | Liu et al. (2021) via the ERA/Modern West restatement, 0.0735; cross-checked against CER/ECCC 2019 national pipeline transport, 0.0744. Applied flat, not distance-scaled |
-| Liquefaction | 0.29 | Gas turbine drive, applied to every terminal for its whole operating life. 0.15 is retained as the low bound and applies only if electrification is contracted and delivered |
+| Liquefaction | 0.29 | Gas turbine drive, applied to every terminal for its whole operating life. Range 0.26–0.36, the gas-turbine plants in [Delphi Group (2013)](https://www2.gov.bc.ca/assets/gov/environment/climate-change/ind/lng/lng_emissions_benchmarking_-_march_2013.pdf) (Sabine Pass to Pluto LNG). Electric drive is a separate sensitivity, not part of the range |
 | Shipping | 0.12 | Howarth (2024), reconstructed against IMO carrier data. Derived on the British Columbia to north-east Asia route and **scaled per asset by route distance** |
 | Regasification | 0.021 | Mukherjee et al. (2025), *Communications Earth & Environment* 6:16, peer-reviewed US LNG lifecycle assessment. Range 0.011–0.0275 from IEA (2025) |
 | Combustion | 2.75 | Stoichiometric methane (44/16), the right central for de-inerted LNG. Range 2.58–3.00 derived from the IPCC 2006 uncertainty intervals |
@@ -283,15 +411,17 @@ external figure.
 Cedar and Woodfibre have interconnection works under construction; the remainder rest on memoranda
 of understanding, aspirations conditional on transmission that has not been built, or statements
 with no firm date. Ksi Lisims holds an MOU with BC Hydro for up to 600 MW conditional on the North
-Coast Transmission Line expansion, which is not built. LNG Canada Phase 2 states an intention to
+Coast Transmission Line expansion, which is not built; its second phase is due by winter 2032. LNG Canada Phase 2 states an intention to
 transition to electric motors as more renewable power becomes available, with no date and no
 contracted supply. A commitment contingent on infrastructure that does not exist is not a basis for
 lowering the emissions factor. Previous drive classifications are retained in
 `liquefaction_drive_note`. Where electrification is later contracted and built, this assumption
-should be revisited. An appendix comparator (`Outputs/figures/fig08_electrification_canada_territorial.png`)
-shows Canada-territorial LNG if liquefaction ran at 0.15 instead of 0.29, both for the assets that
-previously claimed electric drive and for every terminal. That 0.15 is Pembina's published figure
-for LNG Canada Phase 1 under electric drive (*Squaring the Circle: State of LNG 2023*). It
+should be revisited. The drive sensitivity (`src/drive_sensitivity.py`,
+`Outputs/figure_data/sens_liquefaction_drive.csv`) shows the other end: every headline terminal
+on electric drive, at 0.15 and at the BC EAO's 0.021 grid-supply figure for Ksi Lisims as a best
+case, so all gas and all electric bracket what the drive choice can do. That 0.15 is Pembina's
+published figure for LNG Canada Phase 1 under electric drive (*Squaring the Circle: State of LNG
+2023*; Gorski and Lam 2023). It
 replaced 0.12 on 3 September 2026: no Pembina document states 0.12, which appears to have been a
 misreading of the 0.11 tCO2e/t *reduction* in *Wellhead to Waterline* (2014) as an absolute
 intensity.
@@ -324,20 +454,21 @@ America.
 | LNG Canada Phase 1 ramp | 25 / 60 / 85% | Observed startup, first cargo June 2025 |
 | Saint John import | 2.5% flat | Repsol annual report, 8 TBtu regasified in 2023 |
 | Delay where no FID | 5 years | IEA Global LNG Capacity Tracker and Rogers (2017), OIES Energy Insight 4 p. 1. Tested across an asymmetric 4 to 8 years |
-| Operating life | licence end, else 40 years | CER export licence expiry where filed; not a uniform 40-year run |
+| Operating life | licence end, else stated or derived life, else 40 years | CER export licence expiry where filed; not a uniform 40-year run |
 | Methane GWP100 / GWP20 | 29.8 / 82.5 | IPCC AR6 Working Group I, fossil methane |
 | Remaining 1.5°C budget (50%) | 170 GtCO2 | Global Carbon Budget 2025, from start of 2026 |
 | Remaining 1.7°C / 2°C (50%) | 525 / 1,055 GtCO2 | Same source |
 
 **Lifespans are capped at each project's export licence expiry** rather than running a uniform 40
-years. The end year may emit; the year after may not. That cut is 1.2 GtCO2e against the same
-nine assets at a uniform 40 years from first export with no licence stop (8,372.5 Mt versus
-7,167.1 Mt). Anyone comparing versions should treat that as a methodological improvement, not
+years. The end year may emit; the year after may not. That cut is 1.8 GtCO2e against the same
+nine assets at a uniform 40 years from first export with no licence stop (9,155.3 Mt versus
+7,390.3 Mt). Anyone comparing versions should treat that as a methodological improvement, not
 an error in the lower total. Where a proponent states a different operating life, that is used
-instead: Summit Lake PG LNG states 30 years.
+instead: Summit Lake PG LNG states 30 years. Fermeuse's 18 years are derived from the
+developer's resource claim (see Limitations).
 
 Lifetime emissions are also reported as a share of those remaining budgets. The budgets are
-CO2, so the **paper value is the CO2-only lifetime** (6,909.5 MtCO2 at full buildout, 4.1% of
+CO2, so the **paper value is the CO2-only lifetime** (7,124.7 MtCO2 at full buildout, 4.2% of
 the 170 GtCO2 remaining for 1.5°C). That is like for like. The panel carries an explicit
 per-gas split — `co2_mt`, `ch4_derived_co2e_mt` and `ch4_mass_kt` per asset-year, summing to
 `emissions_mtco2e` exactly — built from parameters already on the workbook: upstream CH4 is
@@ -349,7 +480,12 @@ the model. The GWP100 CO2e share against the same budgets (4.3% for 1.5°C) is s
 alongside for continuity.
 
 The FID delay sits inside the lifespan window rather than extending it, so a delayed project has
-fewer operating years. It is the least evidenced parameter in the model.
+fewer operating years. It is the least evidenced parameter in the model. Since 27 September 2026 the delay is not
+added where the register marks `first_export_year_assumes_fid`: a developer date that already
+allows for the build after an FID (Ksi Lisims 2032, Tilbury Phase 1b 2031). Also since
+27 September 2026, where the life is a stated or derived operating life
+(`project_life_years`) with no licence end or authorised term, the delay moves the whole life
+later instead of cutting it: Fermeuse and Summit Lake keep all their operating years.
 
 ### Loss and damage
 
@@ -370,7 +506,7 @@ this buildout do, valued as it does it — and it is how Burke et al. (2026) agg
 stream. Discounting each year's damage back to 2025 at the same 2% answers a different question,
 the cost-benefit one — what is the stream worth today, to weigh against benefits also expressed
 today — and it is how the Government of Canada's regulatory guidance aggregates a multi-year
-stream. At full buildout the two are **C$3,106 bn** valued when caused and **C$1,945 bn** as an
+stream. At full buildout the two are **C$3,176 bn** valued when caused and **C$2,015 bn** as an
 NPV to 2025. The paper asks the loss-and-damage question, so the calendar sum is the central; the
 NPV is not a sensitivity on it but the answer to the other question, and the two are carried
 together wherever the total is stated. An earlier note that "the official schedule already embeds
@@ -384,7 +520,7 @@ net loss from that pulse at all, against 0.98 for the United States and China.
 The replication package ships no country-level damages table by pulse year, so
 no 2020-pulse share is available. The Conference
 Board whole-chain GDP figure (Table 1: C$11.153bn/yr in 2020 CAD at 56 mtpa),
-scaled linearly on proposed export nameplate (now 60.2 mtpa) and inflated to
+scaled linearly on proposed export nameplate (now 65.7 mtpa) and inflated to
 2025 CAD, is the Canada denominator.
 
 Damages are priced **per gas**. Each calendar year contributes
@@ -430,14 +566,16 @@ Factors sheets.
   because it hid the dependence of the stored central on the methane share.
 - Shipping is held at 0.12 although the IMO reconstruction gives 0.110.
 - The Conference Board GDP figure is scaled linearly from 56 mtpa to the proposed export
-  nameplate (60.2 mtpa).
+  nameplate (65.7 mtpa).
 - First-export years of 2033 and 2035 are placeholder sensitivity cases, not filed dates.
   Central fill remains 2030.
-- Cedar is assumed to share Ksi Lisims' electric-drive class in the SI drive sensitivity. The
-  central case is gas turbine for every terminal.
+- The SI drive sensitivity puts every headline terminal on electric drive. It is a bound, not a
+  forecast: the central case is gas turbine for every terminal.
 - The pipeline 0.037–0.133 range is assumed. The central 0.074 is cited; no published
   uncertainty interval for Canadian gas transmission intensity was located.
-- Liquefaction range_high 0.36 is an uncited literature upper bound.
+- The liquefaction Monte Carlo range, 0.26 to 0.36, is the gas-turbine span of one 2013
+  benchmark ([Delphi Group 2013](https://www2.gov.bc.ca/assets/gov/environment/climate-change/ind/lng/lng_emissions_benchmarking_-_march_2013.pdf), Sabine Pass to Pluto LNG). Electric drive is kept
+  out of it on purpose and run as its own sensitivity.
 - `upstream_ch4_share` is **0.25**, the centre of the 18–34% bracket that Johnson et al. (2023)
   supports. It is still a judgement within a bracket rather than a single reported figure, so it
   stays typed as an assumption.
@@ -450,7 +588,11 @@ Factors sheets.
 These are taken from the proponent, not from an independent regulator or inventory, and are
 labelled as such in the register.
 
-- Cedar LNG at 3.3 mtpa. NRCan and the CER publish 3.0.
+- Cedar LNG at 3.75 mtpa, from the developer's certificate amendment approved by the BC EAO in
+  July 2026. The FID announcement said 3.3; NRCan and the CER publish 3.0.
+- Fermeuse at 10 mtpa (developer statement to The Narwhal, March 2026) and its 18-year life,
+  derived from the developer's 9.7 Tcf resource.
+- Ksi Lisims first exports in 2032 and Woodfibre in 2027 (developer statements, July 2026).
 - Kino Aski at 15 mtpa (proponent press coverage; no regulatory process has begun).
 - Kanata LNG at 12 mtpa (proponent; not in GEM).
 - Summit Lake's 30-year operating life.
@@ -527,10 +669,12 @@ storage both rounded to 0.25 and the headline looked insensitive to the share; t
 artefact, not a property of the model. The share also sets the CO2/CH4 split, the SC-CH4 damages
 line, and the `near_term_methane_gwp20` scenario.
 
-**Two projects rest on weak capacity figures.** Kino Aski LNG's 15 mtpa (formerly Marinvest,
+**Three projects rest on weak capacity figures.** Kino Aski LNG's 15 mtpa (formerly Marinvest,
 Baie-Comeau) is from a 17 August 2026 press release; no regulatory process has begun and the
-feedgas pipeline route is undefined. Summit Lake's 2.7 mtpa is an upper bound from an assessment
-the proponent asked to suspend. Both are identified by tier and can be removed from any total.
+feedgas pipeline route is undefined, though the developer now names Western Canadian gas.
+Fermeuse's 10 mtpa is a developer statement to journalists, with no filing. Summit Lake's 2.7
+mtpa is an upper bound from an assessment the proponent asked to suspend. All three are
+identified by tier and can be removed from any total.
 
 **Discovery LNG is cancelled in this version.** GEM records cancelled (inferred 4 y). No
 regulatory filing, proponent statement or news of current activity was found after GEM's
@@ -538,18 +682,16 @@ September 2025 snapshot. The register had carried it as early_proposed at 20 mtp
 of a third-party table that was wrong about Grassy Point, Bear Head and Goldboro. It is now
 inactive, matching GEM. That removes 2,043.9 MtCO2e and 20 mtpa from the headline.
 
-**Fermeuse's 4.5 mtpa is derived, not published, and conditional on the proponent's resource
-claim.** The proponent has not stated a liquefaction capacity. The figure divides the stated
-9.7 Tcf (275 bcm) Jeanne d'Arc resource by 1.38 bcm per mtpa over a 40-year life, which gives
-4.98 mtpa if every molecule became LNG, and then nets the gas liquefaction burns as fuel using the
-model's own factors: 0.29 tCO2e/t liquefaction over 2.75 tCO2/t combustion is 0.1055 t of gas per
-tonne of LNG, so 4.98 / 1.1055 = 4.5 mtpa. Until 3 September 2026 the register carried 5.0,
-without the fuel netting, and called it "the lowest defensible derivation". It was not: the
-derivation assumes full recovery of a resource stated by the proponent, on a flat 40-year profile
-for an associated-gas play whose output would follow the oil decline, with nothing reserved for
-platform fuel or reinjection. Each of those choices pushes the figure up, so it sits closer to an
-upper bound on the proponent's claim than to a conservative one. A 25-year life gives about 8
-mtpa and capital-cost benchmarking 9 to 12; neither is used.
+**Fermeuse's 10 mtpa is a developer statement, and its life is derived.** Crown LNG's chief
+executive told The Narwhal (19 March 2026) the plant would export up to 10 mtpa through a 380 km
+subsea pipeline; no LNG plant application has been filed. The register carries 10 mtpa from
+27 September 2026. The developer's own resource claim, 9.7 Tcf (275 bcm) in the Jeanne d'Arc
+Basin, then bounds the operating life: at 10 mtpa, with the gas liquefaction burns as fuel
+netted at the model's own factors (1.1055 t of feedgas per t of LNG), the resource lasts
+275 / (10 × 1.38 × 1.1055) = 18 years at full output, recorded in `project_life_years`. Running
+10 mtpa for 40 years would need about 21.5 Tcf, twice the developer's claim. Until 27 September
+2026 the register instead derived capacity from the resource over a 40-year life (4.5 mtpa from
+3 September, 5.0 before that); that derivation is superseded.
 
 **Tilbury Phase 2's classification is a judgement.** FortisBC describes the expansion as serving
 Lower Mainland resilience and marine fuelling; NRCan lists it as an export project. This analysis
@@ -577,9 +719,9 @@ side, and the peak magnitude as more robust than its timing.
 **The chain sits at or below every external benchmark it is compared against, and here is what
 that is worth.** `Outputs/benchmark_comparison.csv` assembles six boundary-aligned comparisons;
 none shows this model above the external figure. Liquefaction is held at 0.29 against the IEA's
-0.33 global average: adopting the IEA figure would add roughly **80 Mt** to the
-7,167 Mt lifetime. Shipping is held at 0.12 against the IEA's 0.18 to China: adopting that
-figure as it stands would add roughly **110 Mt**, and on a per-kilometre basis, since the
+0.33 global average: adopting the IEA figure would add roughly **84 Mt** to the
+7,390 Mt lifetime. Shipping is held at 0.12 against the IEA's 0.18 to China: adopting that
+figure as it stands would add roughly **120 Mt**, and on a per-kilometre basis, since the
 IEA voyage is shorter, the IEA intensity would add closer to **300 Mt**. On the aligned
 well-to-regasification boundary the model is 0.78 tCO2e/t against Roman-White et al.'s expected
 1.19, and on liquefaction plus shipping plus regasification it is 0.43 against Balcombe et al.'s
@@ -587,9 +729,9 @@ well-to-regasification boundary the model is 0.78 tCO2e/t against Roman-White et
 the direction is uniformly conservative, and a reader who prefers the external values can scale
 from the stage series in `Outputs/figure_data/fig01_stage_breakdown.csv`.
 
-**Annual figures come in two forms.** The headline annual is the panel peak (235.9 MtCO2e in
-2037). `life_average_annual_mt` (205.1 MtCO2e/yr) is a life-average across each facility's
-operating window. The published lifetime (7,167.1 MtCO2e) is the sum of the calendar panel
+**Annual figures come in two forms.** The headline annual is the panel peak (253.4 MtCO2e in
+2037). `life_average_annual_mt` (222.3 MtCO2e/yr) is a life-average across each facility's
+operating window. The published lifetime (7,390.3 MtCO2e) is the sum of the calendar panel
 from 2025 through 2069. Duration × life-average is no longer published.
 
 **One route distance is the west-coast basis rather than a port-specific figure.** Kanata LNG
@@ -629,7 +771,7 @@ python build_results.py
 The build sets Matplotlib's Agg backend, so figures write without a display.
 
 Reads both workbooks from `Inputs/`, runs all five scenarios, and writes the results workbook,
-`SLIDE_TABLES.xlsx`, the summary and the figures to `Outputs/`. The inputs are opened read-only
+the locked paper set, the SI and benchmark tables, and the figures to `Outputs/`. The inputs are opened read-only
 and the run asserts they are unmodified on completion.
 
 **Every published number is locked.** `EXPECTED_BUILD_OUT` in `build_results.py` holds the paper
@@ -643,13 +785,10 @@ Repository metadata for citation is in `CITATION.cff`.
 
 Workbook edits are deliberate and scripted. The model never writes to `Inputs/`; the one-off
 scripts that changed an input workbook or the register live in `tools/`, each documenting what it
-changed and why.
-
-The three dated documents in `Outputs/` — the sourcing audit, the Roman-White gap diagnostic
-and the oil comparator audit — each open with a banner that is
-generated, not hand-written: `src/banners.py` renders it from the lock constants, and the run
-asserts every banner matches. After a re-lock, `python tools/refresh_banners.py` rewrites them;
-until it is run, the build fails and says so. Hand-written banners went stale twice, which is why.
+changed and why. The 27 September 2026 edits are
+`tools/register_update_2026-09-27.py`, `tools/register_update_2026-09-27b.py`,
+`tools/register_update_2026-09-27c.py` and `tools/data_inputs_update_2026-09-27.py`.
+They are records of edits already applied. Do not run them again.
 
 To change an assumption, edit the input workbooks rather than the code. Emission factors,
 capacities, scenarios, utilisation, GWP values, FID and life bounds, and the LCA comparator
@@ -707,7 +846,7 @@ Guidelines.
 Code, asset register and results:
 
 > Stretch, F. (2026). *Canada LNG Expansion: Lifecycle Emissions Model*
-> (version 2026.09.24). Zenodo. https://github.com/FStretch/canada_lng_carbon_bomb
+> (version 2026.09.27). Zenodo. https://github.com/FStretch/canada_lng_carbon_bomb
 
 The citable version is the Zenodo record created from the GitHub release. Use the DOI on
 that record in the manuscript data-availability statement.

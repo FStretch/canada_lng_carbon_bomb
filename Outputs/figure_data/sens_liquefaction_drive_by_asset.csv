@@ -1,5 +1,19 @@
-case,project_id,evidence,liquefaction_intensity,lifetime_delta_mtco2e,canada_delta_mtco2e
-electric_drive_gas_generation,ksi_lisims_lng,sourced (BC EAO assessment is for this facility),0.156,-39.543935999999974,-39.543935999999974
-electric_drive_gas_generation,cedar_lng,assumption: same floating-LNG electric-drive class as Ksi Lisims; no Cedar-specific figure was located,0.156,-14.213634600000006,-14.213634600000006
-electric_drive_grid,ksi_lisims_lng,sourced (BC EAO assessment is for this facility),0.021,-79.38297599999996,-79.38297599999996
-electric_drive_grid,cedar_lng,assumption: same floating-LNG electric-drive class as Ksi Lisims; no Cedar-specific figure was located,0.021,-28.533341100000012,-28.533341100000012
+case,project_id,liquefaction_intensity,lifetime_delta_mtco2e,canada_delta_mtco2e
+all_electric_pembina,lng_canada_phase_1,0.15,-51.645999999999994,-51.645999999999994
+all_electric_pembina,cedar_lng,0.15,-16.875074999999995,-16.875074999999995
+all_electric_pembina,woodfibre_lng,0.15,-7.476713999999999,-7.476713999999999
+all_electric_pembina,lng_canada_phase_2,0.15,-35.04479999999998,-35.04479999999998
+all_electric_pembina,ksi_lisims_lng,0.15,-44.133599999999994,-44.133599999999994
+all_electric_pembina,marinvest_baie_comeau,0.15,-60.45269999999998,-60.45269999999998
+all_electric_pembina,summit_lake_pg_lng,0.15,-9.295776000000002,-9.295776000000002
+all_electric_pembina,fermeuse_energy_flng,0.15,-20.3336,-20.3336
+all_electric_pembina,kanata_lng,0.15,-48.36215999999999,-48.36215999999999
+all_electric_grid,lng_canada_phase_1,0.021,-99.23409999999998,-99.23409999999998
+all_electric_grid,cedar_lng,0.021,-32.42425124999998,-32.42425124999998
+all_electric_grid,woodfibre_lng,0.021,-14.3659719,-14.3659719
+all_electric_grid,lng_canada_phase_2,0.021,-67.33607999999997,-67.33607999999997
+all_electric_grid,ksi_lisims_lng,0.021,-84.79955999999999,-84.79955999999999
+all_electric_grid,marinvest_baie_comeau,0.021,-116.15554499999996,-116.15554499999996
+all_electric_grid,summit_lake_pg_lng,0.021,-17.861169600000004,-17.861169600000004
+all_electric_grid,fermeuse_energy_flng,0.021,-39.069559999999996,-39.069559999999996
+all_electric_grid,kanata_lng,0.021,-92.92443599999997,-92.92443599999997

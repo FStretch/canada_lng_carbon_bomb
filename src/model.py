@@ -59,6 +59,14 @@ def _lifespan(
     elif pd.notna(row["project_life_years"]):
         life = int(row["project_life_years"])
         src = "Asset Register:project_life_years"
+        if _life_shifts_with_delay(row):
+            # Added 27 Sep 2026. A stated or resource-derived operating life has no
+            # calendar end date, so the FID delay moves the whole life later
+            # instead of eating into it. Licence terms and the 40-year fallback
+            # keep the delay inside the window.
+            shift = int(get_param(params, "fid_delay_mid"))
+            life += shift
+            src += f" + fid_delay_mid={shift}y (delay moves the life later; operating years kept)"
     else:
         life = int(get_param(params, "lifecycle_years_default"))
         src = "Parameters:lifecycle_years_default"
@@ -91,6 +99,45 @@ def _fid_ok(row) -> bool:
     if val is False or val in (0, 0.0):
         return False
     return str(row.get("calc_group", row["tier"])) == "operating"
+
+
+def _date_assumes_fid(row) -> bool:
+    """True when the register marks first_export_year as a developer date that already
+    allows for the build after an FID (field first_export_year_assumes_fid).
+
+    Added 27 Sep 2026. Ksi Lisims' 2032 first deliveries, for example, follow from a
+    planned end-2026 FID; adding fid_delay_mid on top would count the same build time
+    twice. Blank means False, so registers without the column behave as before.
+    """
+    val = row.get("first_export_year_assumes_fid")
+    if val is None or (isinstance(val, float) and pd.isna(val)):
+        return False
+    if isinstance(val, str):
+        return val.strip().lower() in ("true", "yes", "1")
+    return bool(val)
+
+
+def _fid_delay_applies(row) -> bool:
+    """The FID delay applies to an asset without a confirmed FID, unless its
+    first_export_year already assumes one."""
+    return not (_fid_ok(row) or _date_assumes_fid(row))
+
+
+def _life_shifts_with_delay(row) -> bool:
+    """True when the asset's life is a stated or resource-derived operating life
+    (project_life_years) with no licence term or licence end year, and the FID
+    delay applies. The delay then moves the life later rather than shortening it.
+    Added 27 Sep 2026 (Fermeuse, 18 years from the developer's resource; Summit
+    Lake, 30 years stated by the developer)."""
+    term = row.get("authorised_export_term_years")
+    if term is not None and not (isinstance(term, float) and pd.isna(term)) and pd.notna(term):
+        return False
+    if _licence_end_year(row) is not None:
+        return False
+    stated = row.get("project_life_years")
+    if stated is None or pd.isna(stated):
+        return False
+    return _fid_delay_applies(row)
 
 
 def _is_legacy(row, lifespan: int, current_year: int | None = None) -> bool:
@@ -154,7 +201,7 @@ def utilisation_for_project(
         ramp = int(get_param(params, "ramp_years"))
         source = "parameters:year_1/year_2/steady_state_utilisation (default ramp)"
 
-    delay = 0 if fid_ok else int(get_param(params, "fid_delay_mid"))
+    delay = 0 if (fid_ok or _date_assumes_fid(row)) else int(get_param(params, "fid_delay_mid"))
     total = op = 0
     for year in range(lifespan):
         if year < delay:
@@ -163,6 +210,8 @@ def utilisation_for_project(
         total += y1 if op == 1 and ramp >= 1 else y2 if op == 2 and ramp >= 2 else steady
     if delay:
         source += f"; fid_delay_mid={delay}y inside lifespan"
+    elif not fid_ok:
+        source += "; no fid delay: first_export_year_assumes_fid (register)"
     util_sum = float(total)
     return util_sum, source, util_sum / lifespan
 
@@ -317,7 +366,7 @@ def electrification_counterfactual(
     by_project: pd.DataFrame,
     scenario: str = DEFAULT_SCENARIO,
 ) -> dict:
-    """Canada-territorial LNG if liquefaction ran electric (0.12) versus gas (0.29).
+    """Canada-territorial LNG if liquefaction ran electric (0.15) versus gas (0.29).
 
     Does not change the headline case. Liquefaction is CAN-tagged on every chain
     that includes it, so the intensity delta lands entirely in Canada territorial.

@@ -84,7 +84,6 @@ INPUTS = ROOT / "Inputs" / "Canada_LNG_Data_Inputs.xlsx"
 INPUTS_DIR = ROOT / "Inputs"
 OUT = ROOT / "Outputs"
 RESULTS = OUT / "Canada_LNG_Emissions_Results.xlsx"
-SLIDE_TABLES = OUT / "SLIDE_TABLES.xlsx"
 SI_TABLE_CSV = OUT / "si_table_assets.csv"
 BENCHMARK_CSV = OUT / "benchmark_comparison.csv"
 SUMMARY_MD = OUT / "RESULTS_SUMMARY.md"
@@ -118,11 +117,11 @@ BEFORE = {
 }
 EXPECTED_EXPORT_BY_CALC = {
     "operating": 14.0,
-    "under_construction": 5.4,
-    "proposed": 60.2,
+    "under_construction": 5.85,
+    "proposed": 65.7,
 }
-EXPECTED_EXPORT_TOTAL = 79.6
-EXPECTED_EARLY_EXPORT = 34.2
+EXPECTED_EXPORT_TOTAL = 85.55
+EXPECTED_EARLY_EXPORT = 39.7
 EXPECTED_ADVANCED_EXPORT = 26.0
 # Life-average territorial shares, one decimal. Tied to the Data Inputs README
 # and the repo README so those documents cannot drift from the model.
@@ -151,15 +150,22 @@ EXPECTED_ADVANCED_EXPORT = 26.0
 #   and about 35% above two independent cited routes (Liu et al. 2021 via the
 #   ERA restatement, 0.0735; CER/NIR 2019 pipeline transport, 0.0744). Pipeline
 #   is CAN-tagged, so cutting it moves weight from CAN to FOR.
+#   Register and method update (27 Sep 2026): latest developer and regulator
+#   data in the register (Fermeuse 10 mtpa with an 18-year derived life, Cedar
+#   3.75, Ksi Lisims 2032 and Tilbury 1b 2031 with no added FID delay, Woodfibre
+#   2027); FID delay moves a project_life_years life later instead of cutting
+#   it; liquefaction sampled 0.26 / 0.29 / 0.36 in the Monte Carlo. Export
+#   79.6 -> 85.55 mtpa; lifetime 7390.3; peak 253.4 (2037); damages 3,176 bn,
+#   NPV 2,015 bn; split unchanged at one decimal; combustion share 78.0 -> 78.1.
 EXPECTED_TERRITORIAL_SHARE_PCT = {"CAN": 18.2, "BUNK": 3.2, "FOR": 78.6}
-EXPECTED_LIFETIME_MT = 7167.1
+EXPECTED_LIFETIME_MT = 7390.3
 EXPECTED_PEAK_YEAR = 2037
-EXPECTED_PEAK_MT = 235.9
+EXPECTED_PEAK_MT = 253.4
 
-# The paper set, locked 3 September 2026 (Discovery cancelled; GWP20 methane-
+# The paper set, locked 27 September 2026 (Discovery cancelled; GWP20 methane-
 # only; Monte Carlo triangles read from the workbooks; regasification and the
 # combustion range bounds moved onto cited values; pipeline moved onto two
-# converging cited routes). The paper reports the central
+# converging cited routes; 27 Sep register and method update). The paper reports the central
 # case — the point estimate from the central factor values — with the Monte
 # Carlo 5th to 95th percentile as its interval. The MC median is stated once,
 # with the reason it sits above the central: the stage triangles are
@@ -170,7 +176,7 @@ EXPECTED_PEAK_MT = 235.9
 # SHA-256 of Outputs/paper_set_locked.csv, the rounded canonical copy of the
 # paper set. Re-lock it in the same commit as EXPECTED_BUILD_OUT, never alone.
 EXPECTED_PAPER_SET_SHA256 = (
-    "94f7042ab86e6aa87091b26fdac35ebc0af7b5ad28dc05c9a5f6f135de8a69c3"
+    "77d14a4b9f7ae2cc5225a4c4019aba5839c8f4e613dbc911de3d12c96d8d21f9"
 )
 
 # Figure 10's model well-to-regasification intensity, GWP100, two decimals.
@@ -180,36 +186,35 @@ EXPECTED_WELL_TO_REGAS_T_PER_T = 0.78
 
 EXPECTED_BUILD_OUT = {
     "committed": {
-        "lifetime_mt": 1860.0,
-        "lifetime_co2_only_mt": 1792.0,
+        "lifetime_mt": 1917.3,
+        "lifetime_co2_only_mt": 1847.2,
         "peak_year": 2030,
-        "peak_mt": 58.0,
-        "damages_cad_bn": 745,
-        "damages_npv_cad_bn": 524,
+        "peak_mt": 59.4,
+        "damages_cad_bn": 769,
+        "damages_npv_cad_bn": 539,
     },
     "committed_plus_advanced": {
-        "lifetime_mt": 3786.4,
-        "lifetime_co2_only_mt": 3648.0,
+        "lifetime_mt": 3914.9,
+        "lifetime_co2_only_mt": 3771.7,
         "peak_year": 2037,
-        "peak_mt": 135.1,
-        "damages_cad_bn": 1572,
-        "damages_npv_cad_bn": 1051,
+        "peak_mt": 136.4,
+        "damages_cad_bn": 1620,
+        "damages_npv_cad_bn": 1088,
     },
     "full": {
-        "lifetime_mt": 7167.1,
-        "lifetime_co2_only_mt": 6909.5,
+        "lifetime_mt": 7390.3,
+        "lifetime_co2_only_mt": 7124.7,
         "peak_year": 2037,
-        "peak_mt": 235.9,
-        "damages_cad_bn": 3106,
-        "damages_npv_cad_bn": 1945,
+        "peak_mt": 253.4,
+        "damages_cad_bn": 3176,
+        "damages_npv_cad_bn": 2015,
     },
 }
 
 
 def current_lock() -> dict:
-    """The locked values as one dict, for the generated banners on the dated
-    documents (src/banners.py). Built from the EXPECTED_* constants above so a
-    banner can only ever say what the run asserts."""
+    """The locked values as one dict. Built from the EXPECTED_* constants above
+    so a caller can only ever report what the run asserts."""
     return {
         "lifetime_mt": EXPECTED_LIFETIME_MT,
         "peak_mt": EXPECTED_PEAK_MT,
@@ -1000,9 +1005,15 @@ def write_review_summary(
         f"every terminal): electrification is not assumed "
         f"(`liquefaction_electrification_assumed`="
         f"{get_param(params, 'liquefaction_electrification_assumed')}). "
-        f"{float(inputs['factors'].loc['liquefaction', 'range_low']):.2f} is "
-        f"retained as range_low and applies only if electrification is "
-        f"contracted and delivered. Previous drive classifications are in "
+        f"The Monte Carlo samples "
+        f"{float(inputs['factors'].loc['liquefaction', 'range_low']):.2f} / "
+        f"{liq_central:.2f} / "
+        f"{float(inputs['factors'].loc['liquefaction', 'range_high']):.2f}, the "
+        f"gas-turbine range (Delphi Group 2013). Electric drive is a separate "
+        f"sensitivity with every terminal electric at "
+        f"{float(get_param(params, 'liquefaction_electric')):.2f} and "
+        f"{float(get_param(params, 'liquefaction_electric_drive_grid')):.3f} "
+        f"(drive sensitivity section). Previous drive classifications are in "
         f"`liquefaction_drive_note`."
     )
     if placeholder_sens is not None:
@@ -1075,7 +1086,9 @@ def write_review_summary(
         )
     lines.append("")
     lines.append(
-        "Figure: `Outputs/figures/fig08_electrification_canada_territorial.png`."
+        "The whole-life version, with every headline terminal electric, is the "
+        "liquefaction drive-type sensitivity below "
+        "(`Outputs/figure_data/sens_liquefaction_drive.csv`)."
     )
     lines.append("")
 
@@ -1892,7 +1905,7 @@ def main() -> None:
     assert abs(w2r - EXPECTED_WELL_TO_REGAS_T_PER_T) < 1e-9, (
         f"well-to-regasification {w2r} t/t; locked "
         f"{EXPECTED_WELL_TO_REGAS_T_PER_T}. If deliberate, re-lock "
-        "EXPECTED_WELL_TO_REGAS_T_PER_T and run tools/refresh_banners.py."
+        "EXPECTED_WELL_TO_REGAS_T_PER_T."
     )
     print(f"[validate] well-to-regasification {w2r} t/t = lock PASS")
     for extra in (fig10["path"], fig10["csv"]):

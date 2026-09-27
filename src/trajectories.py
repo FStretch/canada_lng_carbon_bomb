@@ -16,7 +16,7 @@ import pandas as pd
 
 from src.inputs import DEFAULT_SCENARIO, INTENSITY_SCENARIOS, get_param
 from src.model import (
-    _fid_ok,
+    _fid_delay_applies,
     _is_legacy,
     _licence_end_year,
     _lifespan,
@@ -62,7 +62,7 @@ def _util_schedule(row, lifespan: int, params: dict) -> list[float]:
         steady = float(get_param(params, "steady_state_utilisation"))
 
     ramp = int(get_param(params, "ramp_years"))
-    delay = 0 if _fid_ok(row) else int(get_param(params, "fid_delay_mid"))
+    delay = int(get_param(params, "fid_delay_mid")) if _fid_delay_applies(row) else 0
     sched: list[float] = []
     op = 0
     for year in range(lifespan):

@@ -1,9 +1,11 @@
 """Kino Aski feedgas sensitivity (supplementary information only).
 
 Kino Aski LNG (formerly Marinvest, Baie-Comeau) is 15 mtpa on the Quebec north
-shore with no stated feedgas route. The register records the gap. Two candidate
-supplies were named in the proponent coverage, and they differ in two ways that
-matter to this model:
+shore. The developer names Western Canadian gas, carried over existing networks
+plus about 1,000 km of new pipeline, but no route is defined (Kino Aski LNG
+website https://kinoaskilng.ca/; gasworld; federal Canada Investment Summit
+Prospectus, Sep 2026, p. 8). The United States supply case run until 27 Sep 2026
+was dropped because no source proposes it. What remains is the pipeline haul:
 
 **Case A, Western Canadian supply.** Gas reaches the Quebec north shore from the
 Western Canada Sedimentary Basin. The pipeline haul is far longer than the
@@ -13,10 +15,6 @@ yardstick for the illustrative multipliers; the 0.074 pipeline_transport
 factor is not calibrated on it (it comes from Liu et al. 2021 on an 1,100 km
 Alberta line and a CER national average). Territory stays CAN for both
 upstream and pipeline.
-
-**Case B, United States supply.** Appalachian gas. Intensities are unchanged -
-this model has no US-specific factors and does not invent any - but upstream and
-pipeline emissions occur outside Canada, so they are tagged FOR instead of CAN.
 
 No central factor is touched and the central case is unchanged.
 
@@ -57,7 +55,7 @@ def run_kino_aski_feedgas_sensitivity(
     inputs: dict,
     panel: pd.DataFrame,
 ) -> dict:
-    """Case A (Western Canadian, distance-scaled pipeline) and Case B (US, FOR)."""
+    """Case A (Western Canadian, distance-scaled pipeline). Case B dropped 27 Sep 2026."""
     chains, groups = headline_scope_sets(inputs)
     row = _asset_row(inputs, KINO_ASKI_ID)
     if not row_in_headline_scope(row, chains, groups):
@@ -132,15 +130,6 @@ def run_kino_aski_feedgas_sensitivity(
                 False,
             )
         )
-    rows.append(
-        _pack(
-            "B_us_appalachian",
-            "Case B, United States supply (intensities unchanged, upstream and "
-            "pipeline tagged FOR)",
-            1.0,
-            True,
-        )
-    )
     cases = pd.DataFrame(rows)
 
     # Canada-territorial share of the whole headline under each case.
@@ -193,14 +182,17 @@ def format_feedgas_markdown(sens: dict, inputs: dict) -> list[str]:
     lines.append("## Kino Aski feedgas sensitivity (SI only)")
     lines.append("")
     lines.append(
-        f"Kino Aski LNG (15 mtpa, Baie-Comeau) has **no stated feedgas route**. "
-        f"The register now carries `feedgas_basin` = \"not available\" for it, "
-        f"with the two candidate supplies named in `feedgas_basin_note`: "
-        f"Western Canadian gas via the TC Energy Canadian Mainline, and United "
-        f"States Appalachian gas. The distinction decides both the pipeline "
-        f"haul and whether upstream and pipeline emissions are Canada "
-        f"territorial. Central factors are untouched and the central case is "
-        f"unchanged; this is supplementary information."
+        f"Kino Aski LNG (15 mtpa, Baie-Comeau): the developer names **Western "
+        f"Canadian gas**, carried over existing networks plus about 1,000 km of "
+        f"new pipeline, but **no route is defined** (Kino Aski LNG website, "
+        f"https://kinoaskilng.ca/; federal Canada Investment Summit Prospectus, "
+        f"September 2026, p. 8). The register carries `feedgas_basin` = Western "
+        f"Canada Sedimentary Basin (developer-stated). Upstream and pipeline "
+        f"emissions are therefore Canada territorial; what is uncertain is the "
+        f"length of the pipeline haul. The United States supply case run until "
+        f"27 September 2026 was dropped because no source proposes it. Central "
+        f"factors are untouched and the central case is unchanged; this is "
+        f"supplementary information."
     )
     lines.append("")
     lines.append(
@@ -220,13 +212,6 @@ def format_feedgas_markdown(sens: dict, inputs: dict) -> list[str]:
     )
     lines.append("")
     lines.append(
-        "**Case B, United States supply.** Intensities are unchanged - this "
-        "model has no US-specific factors and does not invent any - but "
-        "upstream and pipeline emissions occur outside Canada and are tagged "
-        "FOR instead of CAN."
-    )
-    lines.append("")
-    lines.append(
         "| case | pipeline tCO2e/t | Kino Aski lifetime Mt | headline lifetime Mt | "
         "headline Canada-territorial Mt | headline Canada share |"
     )
@@ -240,16 +225,12 @@ def format_feedgas_markdown(sens: dict, inputs: dict) -> list[str]:
             f"{r['headline_canada_pct']:.1f}% |"
         )
     lines.append("")
-    b = cases.loc[cases["case"] == "B_us_appalachian"].iloc[0]
-    c = cases.loc[cases["case"] == "central"].iloc[0]
+    a_rows = cases.loc[cases["case"].str.startswith("A_")]
     lines.append(
-        f"Case B leaves the total unchanged ({b['headline_lifetime_mtco2e']:,.1f} "
-        f"Mt) and moves {abs(b['kino_can_delta_mtco2e']):,.1f} Mt out of the "
-        f"Canada-territorial column, taking the Canada share from "
-        f"{c['headline_canada_pct']:.1f}% to {b['headline_canada_pct']:.1f}%. "
-        f"That is the larger of the two effects: which country's gas Kino Aski "
-        f"burns matters more to the territorial answer than how far it travels. "
-        f"Series: `Outputs/figure_data/sens_kino_aski_feedgas.csv`."
+        f"The illustrative band adds {a_rows['kino_aski_delta_mtco2e'].min():,.0f} to "
+        f"{a_rows['kino_aski_delta_mtco2e'].max():,.0f} MtCO2e to Kino Aski's lifetime, "
+        f"all of it Canada territorial. Series: "
+        f"`Outputs/figure_data/sens_kino_aski_feedgas.csv`."
     )
     lines.append("")
     lines.append("### Limitations: feedgas basin and route")
@@ -273,20 +254,17 @@ def format_feedgas_markdown(sens: dict, inputs: dict) -> list[str]:
     )
     lines.append("")
     lines.append(
-        "- **Kino Aski (Baie-Comeau, 15 mtpa).** If the feedgas is Western "
-        "Canadian, the upstream factor is right but the pipeline factor is "
+        "- **Kino Aski (Baie-Comeau, 15 mtpa).** With Western Canadian feedgas, "
+        "as the developer states, the upstream factor is right but the pipeline factor is "
         "**too low**, because a haul to the Quebec north shore is several times "
         "the 670 km Coastal GasLink yardstick: the illustrative band above "
         "puts the understatement at roughly "
         f"{cases.loc[cases['case'].str.startswith('A_'), 'kino_aski_delta_mtco2e'].min():,.0f} "
         f"to "
         f"{cases.loc[cases['case'].str.startswith('A_'), 'kino_aski_delta_mtco2e'].max():,.0f} "
-        "MtCO2e over the asset's life. If the feedgas is United States "
-        "Appalachian, the upstream factor is the wrong jurisdiction entirely - "
-        "measured Appalachian methane intensities are generally **higher** than "
-        "Montney-area ones, so the factor is again likely too low - and the "
-        "territorial attribution is wrong by the whole of upstream and "
-        "pipeline. No US factor is substituted, because this model has none."
+        "MtCO2e over the asset's life. The developer states Western Canadian "
+        "supply, so the upstream factor and the Canada-territorial attribution "
+        "stand."
     )
     lines.append(
         f"- **Fermeuse (Avalon Peninsula, "

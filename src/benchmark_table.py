@@ -263,7 +263,7 @@ def format_benchmark_markdown(df: pd.DataFrame) -> list[str]:
         "Every external comparison the model holds, in one place. Each row "
         "carries **both** boundaries, because the like-for-like question is "
         "what makes the comparison worth anything. Machine-readable copy: "
-        "`Outputs/benchmark_comparison.csv`; also a sheet in `SLIDE_TABLES.xlsx`."
+        "`Outputs/benchmark_comparison.csv`."
     )
     lines.append("")
     lines.append(

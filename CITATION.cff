@@ -29,8 +29,8 @@ keywords:
   - Canada
 license: CC-BY-4.0
 repository-code: "https://github.com/FStretch/canada_lng_carbon_bomb"
-version: "2026.09.24"
-date-released: "2026-09-24"
+version: "2026.09.27"
+date-released: "2026-09-27"
 references:
   - type: data
     title: "Global Gas Infrastructure Tracker: LNG Terminals"

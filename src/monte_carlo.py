@@ -24,7 +24,9 @@ from src.loss_damage import (
     load_ld_params,
 )
 from src.model import (
+    _fid_delay_applies,
     _fid_ok,
+    _life_shifts_with_delay,
     _is_legacy,
     _licence_end_year,
     _lifespan,
@@ -50,6 +52,9 @@ SAMPLED_STAGES = (
     "shipping",
     "regasification",
     "combustion",
+    # Added 27 Sep 2026: gas-turbine range 0.26-0.36 (Delphi Group 2013).
+    # Electric drive stays a separate sensitivity, not part of this band.
+    "liquefaction",
 )
 
 
@@ -65,6 +70,8 @@ class AssetSpec:
     life_sampled: bool
     licence_end: int | None
     fid_ok: bool
+    delay_applies: bool
+    life_shifts: bool
     y1: float
     y2: float
     steady: float
@@ -182,6 +189,8 @@ def _compile_assets(inputs: dict) -> list[AssetSpec]:
                 life_sampled=life_sampled,
                 licence_end=licence_end,
                 fid_ok=_fid_ok(row),
+                delay_applies=_fid_delay_applies(row),
+                life_shifts=_life_shifts_with_delay(row),
                 y1=a,
                 y2=b,
                 steady=c,
@@ -250,7 +259,7 @@ def _intensity_by_draw(
             if stage == "upstream_production":
                 draw = upstream
             elif stage == "liquefaction":
-                draw = np.full(n_draws, liquefaction)
+                draw = stage_draws.get("liquefaction", np.full(n_draws, liquefaction))
             elif stage == "shipping":
                 draw = stage_draws[stage] * spec.route_scale
             elif stage in stage_draws:
@@ -357,15 +366,20 @@ def _simulate(
     yearly = {name: np.zeros((n_draws, len(years))) for name in BUILD_OUTS}
     yearly_co2 = {name: np.zeros((n_draws, len(years))) for name in BUILD_OUTS}
     yearly_ch4 = {name: np.zeros((n_draws, len(years))) for name in BUILD_OUTS}
+    fid_mid = int(get_param(inputs["params"], "fid_delay_mid"))
     for j, spec in enumerate(specs):
-        if spec.life_sampled:
-            life = life_draw
-        else:
-            life = np.full(n_draws, spec.life_central, dtype=int)
-        if spec.fid_ok:
+        if not spec.delay_applies:
             delay = np.zeros(n_draws, dtype=int)
         else:
             delay = delay_draw
+        if spec.life_sampled:
+            life = life_draw
+        elif spec.life_shifts:
+            # life_central already carries fid_delay_mid; swap in each draw's delay
+            # so the operating years stay fixed.
+            life = (spec.life_central - fid_mid) + delay
+        else:
+            life = np.full(n_draws, spec.life_central, dtype=int)
         util = _util_matrix(
             years,
             spec.start,
@@ -455,7 +469,26 @@ def run_monte_carlo(
     mtpa_to_t = float(get_param(params, "mtpa_to_tonnes"))
     specs = _compile_assets(inputs)
     year0 = PANEL_START_YEAR
-    year1 = max(s.start + 50 - 1 for s in specs)
+    # Last year any draw can emit: the sampled-life ceiling where life is sampled,
+    # the held life otherwise, and never past a licence stop. Until 27 Sep 2026 this
+    # was start + 49 for every asset, which ran past the ECCC schedule's last year
+    # (2080) once Ksi Lisims' first exports moved to 2032, although its licence
+    # stops exports in 2063.
+    life_hi = int(round(_life_tri(params)[2]))
+    delay_hi = int(round(_fid_tri(params)[2]))
+    delay_mid = int(get_param(params, "fid_delay_mid"))
+
+    def _last_possible_year(s: AssetSpec) -> int:
+        if s.life_sampled:
+            life = life_hi
+        elif s.life_shifts:
+            life = s.life_central - delay_mid + delay_hi
+        else:
+            life = s.life_central
+        end = s.start + life - 1
+        return min(end, s.licence_end) if s.licence_end is not None else end
+
+    year1 = max(_last_possible_year(s) for s in specs)
     years = np.arange(year0, year1 + 1)
     prices, prices_ch4 = _eccc_price_cad2025(inputs_dir, years)
     gwp100 = float(get_param(params, "gwp100_ch4"))
@@ -582,7 +615,7 @@ def run_monte_carlo(
     )
 
     sampled_life_ids = [s.project_id for s in specs if s.life_sampled]
-    sampled_fid_ids = [s.project_id for s in specs if not s.fid_ok]
+    sampled_fid_ids = [s.project_id for s in specs if s.delay_applies]
     param_rows = [
         {
             "parameter": "upstream_production",
@@ -592,12 +625,6 @@ def run_monte_carlo(
                 "near_term_methane_gwp20. Howarth 0.55 is a named point, not a draw."
             ),
             "sampled": True,
-        },
-        {
-            "parameter": "liquefaction",
-            "distribution": "fixed at Emission Factors central",
-            "source": "Emission Factors liquefaction central, asserted equal to Parameters liquefaction_gas_turbine. Electric 0.12 is a discrete counterfactual, not an uncertainty band.",
-            "sampled": False,
         },
         *[
             {
@@ -625,7 +652,10 @@ def run_monte_carlo(
         {
             "parameter": "fid_delay_mid",
             "distribution": f"triangular{fid_tri}, rounded to int",
-            "source": "Parameters fid_delay_low / mid / high; applied to non-FID assets",
+            "source": (
+                "Parameters fid_delay_low / mid / high; applied to non-FID assets "
+                "unless the register marks first_export_year_assumes_fid"
+            ),
             "sampled": True,
         },
         {

@@ -1011,7 +1011,8 @@ def write_ld_figure(ld: dict, inputs: dict, path: Path, csv_path: Path | None = 
     ax.set_ylim(0, ymax * 1.22)
     ax.set_xticks(list(x), list(df["build_out_label"]))
     ax.set_ylabel("Climate damages (C$ billion, 2025 dollars)")
-    ax.set_title("Climate damages by build-out scenario at official carbon values")
+    # No burned-in title (removed 27 Sep 2026): the manuscript caption carries it.
+    # Was: "Climate damages by build-out scenario at official carbon values"
     _ygrid(ax)
     for i, (cal, npv_v, hi_v) in enumerate(zip(calendar, npv, hi)):
         ax.text(
