@@ -958,9 +958,8 @@ def fig09_build_out_damages(ld: dict, inputs: dict) -> pd.DataFrame:
 
 
 def write_ld_figure(ld: dict, inputs: dict, path: Path, csv_path: Path | None = None) -> pd.DataFrame:
-    """Grouped bars: valued-when-caused vs NPV by build-out scenario."""
+    """One bar per build-out: damages valued when caused at ECCC 2%."""
     from src.figures_report import (
-        GOLD,
         INK,
         SCENARIO_COLOR,
         _save,
@@ -973,32 +972,19 @@ def write_ld_figure(ld: dict, inputs: dict, path: Path, csv_path: Path | None = 
         csv_path.parent.mkdir(parents=True, exist_ok=True)
         df.to_csv(csv_path, index=False)
 
-    burke = ld["burke_grid"]
-    g0 = burke.loc[burke["growth_rate"] == 0.0]
-    burke_lo_tn = float(
-        g0.loc[g0["discount_rate_pct"] == 5.0, "total_cad_billion"].iloc[0]
-    ) / 1000.0
-    burke_hi_tn = float(
-        g0.loc[g0["discount_rate_pct"] == 1.5, "total_cad_billion"].iloc[0]
-    ) / 1000.0
-
     path.parent.mkdir(parents=True, exist_ok=True)
     _setup_style()
     fig, ax = plt.subplots(figsize=(9.2, 5.6))
-    x = range(len(df))
-    width = 0.36
+    x = list(range(len(df)))
+    width = 0.55
     calendar = df["valued_when_caused_2pct_cad_bn"].to_numpy()
-    npv = df["npv_2025_2pct_cad_bn"].to_numpy()
     hi = df["valued_when_caused_1_5pct_cad_bn"].to_numpy()
     lo = df["valued_when_caused_2_5pct_cad_bn"].to_numpy()
     colors = [SCENARIO_COLOR[name] for name in df["build_out"]]
-    x_cal = [i - width / 2 for i in x]
-    x_npv = [i + width / 2 for i in x]
-    ax.bar(x_cal, calendar, width, color=colors, label="Valued when caused")
-    ax.bar(x_npv, npv, width, color=colors, alpha=0.45, label="NPV to 2025")
+    ax.bar(x, calendar, width, color=colors)
     yerr = [calendar - lo, hi - calendar]
     ax.errorbar(
-        x_cal,
+        x,
         calendar,
         yerr=yerr,
         fmt="none",
@@ -1008,15 +994,15 @@ def write_ld_figure(ld: dict, inputs: dict, path: Path, csv_path: Path | None = 
         capthick=1.0,
     )
     ymax = float(hi.max())
-    ax.set_ylim(0, ymax * 1.22)
-    ax.set_xticks(list(x), list(df["build_out_label"]))
+    ax.set_ylim(0, ymax * 1.10)
+    ax.set_xticks(x, list(df["build_out_label"]))
     ax.set_ylabel("Climate damages (C$ billion, 2025 dollars)")
     # No burned-in title (removed 27 Sep 2026): the manuscript caption carries it.
     # Was: "Climate damages by build-out scenario at official carbon values"
     _ygrid(ax)
-    for i, (cal, npv_v, hi_v) in enumerate(zip(calendar, npv, hi)):
+    for i, (cal, hi_v) in enumerate(zip(calendar, hi)):
         ax.text(
-            x_cal[i],
+            x[i],
             hi_v + ymax * 0.012,
             f"{cal:,.0f}",
             ha="center",
@@ -1024,26 +1010,6 @@ def write_ld_figure(ld: dict, inputs: dict, path: Path, csv_path: Path | None = 
             fontsize=8,
             color=INK,
         )
-        ax.text(
-            x_npv[i],
-            npv_v + ymax * 0.012,
-            f"{npv_v:,.0f}",
-            ha="center",
-            va="bottom",
-            fontsize=8,
-            color=INK,
-        )
-    full_i = list(df["build_out"]).index("full")
-    ax.annotate(
-        f"Burke et al.: C${burke_lo_tn:.1f}–{burke_hi_tn:.1f} tn through 2100",
-        xy=(full_i, hi[full_i]),
-        xytext=(full_i, ymax * 1.12),
-        ha="center",
-        fontsize=8,
-        color=GOLD,
-        arrowprops=dict(arrowstyle="-", color=GOLD, lw=0.8),
-    )
-    ax.legend(frameon=False, loc="upper left")
     _save(fig, path)
     return df
 
