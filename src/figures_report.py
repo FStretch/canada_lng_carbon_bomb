@@ -11,10 +11,11 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from src.inputs import ALL_STAGES, DEFAULT_SCENARIO
-from src.model import GROUPS, electrification_counterfactual
+from src.inputs import ALL_STAGES, DEFAULT_SCENARIO, get_param
+from src.model import GROUPS, _stage_intensity, electrification_counterfactual
 from src.scope import BUILD_OUTS, build_out_project_ids, headline_sample
 from src.trajectories import (
+    _chain_intensity_split,
     annual_series,
     canada_pathway_series,
     panel_lifetime_mt,
@@ -90,6 +91,7 @@ TERRITORY_COLOR = {
     "BUNK": GOLD,
     "FOR": SAGE,
 }
+PATHWAY_GREY = "#4A4A4A"
 LOCKED_STAGE_SHARE_PCT = {
     "combustion": 78.1,
     "liquefaction": 8.2,
@@ -261,14 +263,24 @@ def figure_2_territorial_split(
     lifetime_mt: float,
     fig_dir: Path,
     data_dir: Path,
+    inputs: dict,
+    panel: pd.DataFrame,
 ) -> dict:
     annual = {"CAN": can, "BUNK": bunk, "FOR": foreign}
+    calendar = territorial_annual(inputs, panel)
+    lifetime = {
+        "CAN": float(calendar["can_mtco2e"].sum()),
+        "BUNK": float(calendar["bunk_mtco2e"].sum()),
+        "FOR": float(calendar["for_mtco2e"].sum()),
+    }
+    # Shares stay the life-average weights (the locked one-decimal split).
+    # Lifetimes are the calendar-panel sums, the same series as figure 2(c).
     rows = pd.DataFrame([
         {
             "territory": TERRITORY_LABEL[code],
             "code": code,
             "share_pct": 100.0 * annual[code] / headline_mt,
-            "lifetime_mtco2e": lifetime_mt * annual[code] / headline_mt,
+            "lifetime_mtco2e": lifetime[code],
         }
         for code in ("CAN", "BUNK", "FOR")
     ])
@@ -308,7 +320,7 @@ def figure_2_territorial_split(
         for code in ("CAN", "BUNK", "FOR")
     ]
     legend_labels = [
-        f"{r.territory} — {r.share_pct:.1f}% ({r.lifetime_mtco2e:,.0f} MtCO2e)"
+        f"{r.territory}: {r.share_pct:.1f}% ({r.lifetime_mtco2e:,.0f} MtCO2e)"
         for r in rows.itertuples()
     ]
     ax.legend(
@@ -344,6 +356,189 @@ def figure_2_territorial_split(
         "lifetime_sum": float(rows["lifetime_mtco2e"].sum()),
         "rounded_shares": rounded,
         "lifetime_mt": lifetime_mt,
+    }
+
+
+def _territory_shares(row, inputs: dict) -> tuple[float, float, float]:
+    """CAN, BUNK and FOR shares of one asset's chain intensity.
+
+    Same split as fig02 (life-average territorial columns) and
+    annual_series(..., canada_only=True). Factors are not re-derived.
+    """
+    total_i, _, _ = _chain_intensity_split(
+        row, DEFAULT_SCENARIO, inputs, canada_only=False
+    )
+    can_i, _, _ = _chain_intensity_split(
+        row, DEFAULT_SCENARIO, inputs, canada_only=True
+    )
+    bunk_i = 0.0
+    chain = inputs["chains"][row["chain"]]
+    for stage, where in chain:
+        if where != "BUNK":
+            continue
+        bunk_i += _stage_intensity(stage, row, DEFAULT_SCENARIO, inputs)[0]
+    if total_i <= 0:
+        raise AssertionError(
+            f"non-positive chain intensity for {row.get('project_id')}"
+        )
+    return can_i / total_i, bunk_i / total_i, (total_i - can_i - bunk_i) / total_i
+
+
+def territorial_annual(inputs: dict, panel: pd.DataFrame) -> pd.DataFrame:
+    """Full build-out annual emissions by territory, 2025-2069.
+
+    Each asset-year of the headline panel is split with that asset's chain
+    intensity. The factors are the ones behind fig02 and
+    annual_series(..., canada_only=True).
+    """
+    years = list(range(2025, 2070))
+    sl = panel.loc[panel["scenario"] == DEFAULT_SCENARIO]
+    shares: dict[str, tuple[float, float, float]] = {}
+    assets = inputs["assets"]
+    for pid in sl["project_id"].unique():
+        row = assets.loc[assets["project_id"] == pid].iloc[0]
+        shares[str(pid)] = _territory_shares(row, inputs)
+
+    can = []
+    bunk = []
+    foreign = []
+    for year in years:
+        ysl = sl.loc[sl["year"] == year]
+        c = b = f = 0.0
+        for rec in ysl.itertuples():
+            sc, sb, sf = shares[str(rec.project_id)]
+            mt = float(rec.emissions_mtco2e)
+            c += mt * sc
+            b += mt * sb
+            f += mt * sf
+        can.append(c)
+        bunk.append(b)
+        foreign.append(f)
+    can_a = np.asarray(can, dtype=float)
+    bunk_a = np.asarray(bunk, dtype=float)
+    for_a = np.asarray(foreign, dtype=float)
+    total = can_a + bunk_a + for_a
+    pathway = canada_pathway_series(inputs["params"], years=tuple(years))
+    path = pathway["canada_pathway_mtco2e_yr"].to_numpy(dtype=float)
+    return pd.DataFrame({
+        "year": years,
+        "can_mtco2e": can_a,
+        "bunk_mtco2e": bunk_a,
+        "for_mtco2e": for_a,
+        "total_mtco2e": total,
+        "canada_pathway_mtco2e": path,
+        "total_minus_pathway_mtco2e": total - path,
+        "can_minus_pathway_mtco2e": can_a - path,
+    })
+
+
+def _first_exceed(years, series, pathway) -> int | None:
+    for year, value, limit in zip(years, series, pathway):
+        if value > limit:
+            return int(year)
+    return None
+
+
+# ---------------------------------------------------------------------------
+# Figure 2(c): annual emissions by territory against Canada's target pathway
+# ---------------------------------------------------------------------------
+
+def figure_2c_territorial_trajectory(
+    inputs: dict,
+    panel: pd.DataFrame,
+    fig_dir: Path,
+    data_dir: Path,
+) -> dict:
+    """Full build-out, 2025-2069, split with each asset's chain intensity."""
+    out_df = territorial_annual(inputs, panel)
+    years = out_df["year"].tolist()
+    can_a = out_df["can_mtco2e"].to_numpy()
+    bunk_a = out_df["bunk_mtco2e"].to_numpy()
+    for_a = out_df["for_mtco2e"].to_numpy()
+    total = out_df["total_mtco2e"].to_numpy()
+    path = out_df["canada_pathway_mtco2e"].to_numpy()
+    projected = float(get_param(inputs["params"], "canada_2030_projected"))
+    total_year = _first_exceed(years, total, path)
+    can_year = _first_exceed(years, can_a, path)
+    if total_year is None or can_year is None:
+        raise AssertionError(
+            f"fig2c found no crossover (total {total_year}, Canada {can_year})"
+        )
+    _write_csv(out_df, data_dir / "fig02c_territorial_trajectory.csv")
+
+    _setup_style()
+    fig, ax = plt.subplots(figsize=(9.0, 4.0))
+    ax.stackplot(
+        years,
+        can_a,
+        bunk_a,
+        for_a,
+        colors=[TERRITORY_COLOR["CAN"], TERRITORY_COLOR["BUNK"], TERRITORY_COLOR["FOR"]],
+        labels=[TERRITORY_LABEL["CAN"], TERRITORY_LABEL["BUNK"], TERRITORY_LABEL["FOR"]],
+    )
+    ax.plot(
+        years,
+        path,
+        color=PATHWAY_GREY,
+        linewidth=1.8,
+        zorder=4,
+        label="Canada's target pathway (top of each target range)",
+    )
+    ax.scatter(
+        [2030],
+        [projected],
+        s=28,
+        color=INK,
+        zorder=5,
+    )
+    ax.annotate(
+        f"Projected 2030 emissions,\ncurrent policy ({projected:.0f} Mt)",
+        xy=(2030, projected),
+        xytext=(2034, projected - 70),
+        ha="left",
+        va="top",
+        fontsize=8,
+        color=INK,
+        arrowprops=dict(arrowstyle="-", color=INK, lw=0.6),
+    )
+    total_at = float(total[years.index(total_year)])
+    can_at = float(can_a[years.index(can_year)])
+    ax.annotate(
+        f"Total exceeds\npathway, {total_year}",
+        xy=(total_year, total_at),
+        xytext=(2026, 320),
+        ha="left",
+        va="center",
+        fontsize=8,
+        color=INK,
+        arrowprops=dict(arrowstyle="-", color=PATHWAY_GREY, lw=0.6),
+    )
+    ax.annotate(
+        f"Canada slice exceeds pathway, {can_year}",
+        xy=(can_year, can_at),
+        xytext=(2052, 390),
+        ha="left",
+        va="center",
+        fontsize=8,
+        color=INK,
+        arrowprops=dict(arrowstyle="-", color=PATHWAY_GREY, lw=0.6),
+    )
+    ax.set_xlim(2025, 2069)
+    ax.set_ylim(0, max(float(path.max()), projected, float(total.max())) * 1.18)
+    ax.set_xlabel("Year")
+    ax.set_ylabel("Annual emissions (MtCO2e/yr)")
+    _ygrid(ax)
+    # Upper right is empty: after 2050 the pathway is zero and the stack
+    # stays near the 253 Mt plateau, well below this corner.
+    ax.legend(frameon=False, loc="upper right", fontsize=8)
+    out = fig_dir / "fig02c_territorial_trajectory.png"
+    _save(fig, out)
+    return {
+        "path": out,
+        "csv": data_dir / "fig02c_territorial_trajectory.csv",
+        "total_exceeds_year": total_year,
+        "canada_exceeds_year": can_year,
+        "projected_2030_mt": projected,
     }
 
 
@@ -539,7 +734,7 @@ def figure_5_pathway_three_upstream(
     path = _pathway_figure(
         lng_lines=lng_lines,
         pathway=pathway,
-        title="Canada's pathway versus territorial LNG — upstream sensitivities",
+        title="Canada's pathway versus territorial LNG, upstream sensitivities",
         caption="",
         out_name="fig05_pathway_three_upstream",
         fig_dir=fig_dir,
@@ -825,9 +1020,12 @@ def build_all_report_figures(
     results = {}
     results["fig1"] = figure_1_stage_breakdown(stages, lifetime_mt, fig_dir, data_dir)
     results["fig2"] = figure_2_territorial_split(
-        can, bunk, foreign, headline, lifetime_mt, fig_dir, data_dir
+        can, bunk, foreign, headline, lifetime_mt, fig_dir, data_dir, inputs, panel
     )
     results["fig3"] = figure_3_three_trajectories(inputs, panel, fig_dir, data_dir)
+    results["fig2c"] = figure_2c_territorial_trajectory(
+        inputs, panel, fig_dir, data_dir
+    )
 
     # Validations
     assert abs(results["fig1"]["share_sum"] - 100.0) < 0.05, results["fig1"]["share_sum"]
@@ -850,9 +1048,37 @@ def build_all_report_figures(
         assert got == expected, (code, got, expected)
     print("[validate] fig2 territorial shares = locked manuscript shares PASS")
 
+    annual = pd.read_csv(data_dir / "fig03_three_trajectories.csv")
+    traj = pd.read_csv(data_dir / "fig02c_territorial_trajectory.csv")
+    joined = traj.merge(annual, on="year", how="inner")
+    split_resid = (
+        joined["can_mtco2e"] + joined["bunk_mtco2e"] + joined["for_mtco2e"]
+        - joined["full"]
+    ).abs().max()
+    assert split_resid < 1e-6, split_resid
+    print("[validate] fig2c annual split = fig03 full build-out PASS")
+    life = pd.read_csv(data_dir / "fig02_territorial_split.csv")
+    for code, col in (("CAN", "can_mtco2e"), ("BUNK", "bunk_mtco2e"), ("FOR", "for_mtco2e")):
+        got = float(traj[col].sum())
+        exp = float(life.loc[life["code"] == code, "lifetime_mtco2e"].iloc[0])
+        assert abs(got - exp) < 0.05, (code, got, exp)
+    print("[validate] fig2c lifetime split = fig02 territorial lifetimes PASS")
+    total_year = results["fig2c"]["total_exceeds_year"]
+    can_year = results["fig2c"]["canada_exceeds_year"]
+    print(
+        f"[validate] fig2c total exceeds pathway in {total_year}; "
+        f"Canada slice in {can_year}"
+    )
+    if abs(total_year - 2041) > 1 or abs(can_year - 2049) > 1:
+        print(
+            f"[note] fig2c crossover years {total_year} and {can_year} "
+            "differ from 2041 and 2049 by more than a year"
+        )
+
     expected_csv = [
         "fig01_stage_breakdown.csv",
         "fig02_territorial_split.csv",
+        "fig02c_territorial_trajectory.csv",
         "fig03_three_trajectories.csv",
     ]
     for name in expected_csv:

@@ -21,8 +21,9 @@ update. Cite the Zenodo DOI of the GitHub release, which is the archival copy.
 and `python build_results.py`.
 
 **Manuscript map.** Figure 1 is `Outputs/figures/fig03_three_trajectories.png`.
-Figure 2(a) is `Outputs/figures/fig01_stage_breakdown.png` and Figure 2(b) is
-`Outputs/figures/fig02_territorial_split.png`. Figure 3 is
+Figure 2(a) is `Outputs/figures/fig01_stage_breakdown.png`, Figure 2(b) is
+`Outputs/figures/fig02_territorial_split.png`, and Figure 2(c) is
+`Outputs/figures/fig02c_territorial_trajectory.png`. Figure 3 is
 `Outputs/figures/fig09_loss_damage_by_group.png`. The locked headline table is
 `Outputs/paper_set_locked.csv`. One row per headline terminal is
 `Outputs/si_table_assets.csv`.

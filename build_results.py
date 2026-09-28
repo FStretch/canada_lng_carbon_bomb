@@ -1841,7 +1841,7 @@ def main() -> None:
             ("inputs_guard", "Inputs opened read-only (rb); writes only under Outputs/."),
             (
                 "paper_outputs",
-                "Paper figures are fig01, fig02, fig03 and fig09. "
+                "Paper figures are fig01, fig02, fig02c, fig03 and fig09. "
                 "Slide tables are not written.",
             ),
             ("findings", "; ".join(inputs["findings"]) if inputs["findings"] else "none"),
