@@ -11,7 +11,7 @@ from pathlib import Path
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-from src.inputs import ALL_STAGES, DEFAULT_SCENARIO, get_param
+from src.inputs import ALL_STAGES, DEFAULT_SCENARIO
 from src.model import GROUPS, _stage_intensity, electrification_counterfactual
 from src.scope import BUILD_OUTS, build_out_project_ids, headline_sample
 from src.trajectories import (
@@ -439,6 +439,48 @@ def _first_exceed(years, series, pathway) -> int | None:
     return None
 
 
+def _crossover_mark(ax, year: int, y_value: float, text: str, text_xy, ha: str) -> None:
+    """Dot on the series, dotted line to y=400, year above it, label in open space."""
+    ax.plot(
+        [year, year],
+        [0, 400],
+        color=PATHWAY_GREY,
+        linestyle=(0, (0.6, 1.6)),
+        linewidth=0.7,
+        zorder=5,
+    )
+    ax.scatter(
+        [year],
+        [y_value],
+        s=36,
+        color=PATHWAY_GREY,
+        edgecolors="white",
+        linewidths=0.9,
+        zorder=6,
+    )
+    ax.text(
+        year,
+        406,
+        str(year),
+        ha="center",
+        va="bottom",
+        fontsize=8,
+        color=INK,
+        zorder=6,
+    )
+    ax.annotate(
+        text,
+        xy=(year, y_value),
+        xytext=text_xy,
+        ha=ha,
+        va="center",
+        fontsize=8,
+        color=INK,
+        arrowprops=dict(arrowstyle="-", color=PATHWAY_GREY, lw=0.6),
+        zorder=6,
+    )
+
+
 # ---------------------------------------------------------------------------
 # Figure 2(c): annual emissions by territory against Canada's target pathway
 # ---------------------------------------------------------------------------
@@ -457,7 +499,6 @@ def figure_2c_territorial_trajectory(
     for_a = out_df["for_mtco2e"].to_numpy()
     total = out_df["total_mtco2e"].to_numpy()
     path = out_df["canada_pathway_mtco2e"].to_numpy()
-    projected = float(get_param(inputs["params"], "canada_2030_projected"))
     total_year = _first_exceed(years, total, path)
     can_year = _first_exceed(years, can_a, path)
     if total_year is None or can_year is None:
@@ -484,47 +525,29 @@ def figure_2c_territorial_trajectory(
         zorder=4,
         label="Canada's target pathway (top of each target range)",
     )
-    ax.scatter(
-        [2030],
-        [projected],
-        s=28,
-        color=INK,
-        zorder=5,
-    )
-    ax.annotate(
-        f"Projected 2030 emissions,\ncurrent policy ({projected:.0f} Mt)",
-        xy=(2030, projected),
-        xytext=(2034, projected - 70),
-        ha="left",
-        va="top",
-        fontsize=8,
-        color=INK,
-        arrowprops=dict(arrowstyle="-", color=INK, lw=0.6),
-    )
     total_at = float(total[years.index(total_year)])
     can_at = float(can_a[years.index(can_year)])
-    ax.annotate(
-        f"Total exceeds\npathway, {total_year}",
-        xy=(total_year, total_at),
-        xytext=(2026, 320),
-        ha="left",
-        va="center",
-        fontsize=8,
-        color=INK,
-        arrowprops=dict(arrowstyle="-", color=PATHWAY_GREY, lw=0.6),
+    # Both labels sit above the stack, where the pathway has already fallen
+    # through it. The total label fits between the two year lines. The Canada
+    # label sits to the right of its year line, under the legend.
+    _crossover_mark(
+        ax,
+        total_year,
+        total_at,
+        "Total exceeds\nCanada's target\npathway",
+        (2042.6, 325),
+        "left",
     )
-    ax.annotate(
-        f"Canada slice exceeds pathway, {can_year}",
-        xy=(can_year, can_at),
-        xytext=(2052, 390),
-        ha="left",
-        va="center",
-        fontsize=8,
-        color=INK,
-        arrowprops=dict(arrowstyle="-", color=PATHWAY_GREY, lw=0.6),
+    _crossover_mark(
+        ax,
+        can_year,
+        can_at,
+        "Canadian portion\nexceeds Canada's\ntarget pathway",
+        (2052.2, 325),
+        "left",
     )
     ax.set_xlim(2025, 2069)
-    ax.set_ylim(0, max(float(path.max()), projected, float(total.max())) * 1.18)
+    ax.set_ylim(0, max(float(path.max()), float(total.max())) * 1.18)
     ax.set_xlabel("Year")
     ax.set_ylabel("Annual emissions (MtCO2e/yr)")
     _ygrid(ax)
@@ -538,7 +561,6 @@ def figure_2c_territorial_trajectory(
         "csv": data_dir / "fig02c_territorial_trajectory.csv",
         "total_exceeds_year": total_year,
         "canada_exceeds_year": can_year,
-        "projected_2030_mt": projected,
     }
 
 
