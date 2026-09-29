@@ -47,3 +47,12 @@ references:
     title: "echolab-stanford/loss_damage: Replication code for Burke, Zahid, Diffenbaugh and Hsiang"
     doi: "10.5281/zenodo.18158445"
     year: 2026
+    authors:
+      - family-names: Burke
+        given-names: Marshall
+      - family-names: Zahid
+        given-names: Mustafa
+      - family-names: Diffenbaugh
+        given-names: Noah S.
+      - family-names: Hsiang
+        given-names: Solomon
