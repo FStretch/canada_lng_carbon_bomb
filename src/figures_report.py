@@ -93,7 +93,7 @@ TERRITORY_COLOR = {
 }
 PATHWAY_GREY = "#4A4A4A"
 LOCKED_STAGE_SHARE_PCT = {
-    "combustion": 78.1,
+    "combustion": 78.0,
     "liquefaction": 8.2,
     "upstream_production": 7.9,
     "shipping": 3.2,

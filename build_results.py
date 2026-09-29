@@ -117,12 +117,12 @@ BEFORE = {
 }
 EXPECTED_EXPORT_BY_CALC = {
     "operating": 14.0,
-    "under_construction": 5.85,
-    "proposed": 65.7,
+    "under_construction": 19.85,
+    "proposed": 51.7,
 }
 EXPECTED_EXPORT_TOTAL = 85.55
 EXPECTED_EARLY_EXPORT = 39.7
-EXPECTED_ADVANCED_EXPORT = 26.0
+EXPECTED_ADVANCED_EXPORT = 12.0
 # Life-average territorial shares, one decimal. Tied to the Data Inputs README
 # and the repo README so those documents cannot drift from the model.
 # Lock history:
@@ -157,26 +157,34 @@ EXPECTED_ADVANCED_EXPORT = 26.0
 #   it; liquefaction sampled 0.26 / 0.29 / 0.36 in the Monte Carlo. Export
 #   79.6 -> 85.55 mtpa; lifetime 7390.3; peak 253.4 (2037); damages 3,176 bn,
 #   NPV 2,015 bn; split unchanged at one decimal; combustion share 78.0 -> 78.1.
+#   LNG Canada Phase 2 FID (29 Sep 2026): 14 mtpa moves from proposed /
+#   advanced_proposed into under_construction. Export total stays 85.55 mtpa
+#   (under construction 5.85 -> 19.85; proposed 65.7 -> 51.7; advanced 26.0 ->
+#   12.0). Lifetime 7556.3; peak 253.4 (2037); committed 2967.4 peaking 100.9
+#   in 2033; committed plus advanced 4080.8 peaking 136.4 in 2034; damages
+#   3,234 bn, NPV 2,064 bn; territorial split unchanged at one decimal;
+#   combustion share 78.1 -> 78.0.
 EXPECTED_TERRITORIAL_SHARE_PCT = {"CAN": 18.2, "BUNK": 3.2, "FOR": 78.6}
-EXPECTED_LIFETIME_MT = 7390.3
+EXPECTED_LIFETIME_MT = 7556.3
 EXPECTED_PEAK_YEAR = 2037
 EXPECTED_PEAK_MT = 253.4
 
-# The paper set, locked 27 September 2026 (Discovery cancelled; GWP20 methane-
-# only; Monte Carlo triangles read from the workbooks; regasification and the
-# combustion range bounds moved onto cited values; pipeline moved onto two
-# converging cited routes; 27 Sep register and method update). The paper reports the central
-# case — the point estimate from the central factor values — with the Monte
-# Carlo 5th to 95th percentile as its interval. The MC median is stated once,
-# with the reason it sits above the central: the stage triangles are
-# right-skewed, shipping 0.05 / 0.12 / 0.31 especially.
+# The paper set, locked 29 September 2026 after the LNG Canada Phase 2 final
+# investment decision (previously 27 September 2026: Discovery cancelled; GWP20
+# methane-only; Monte Carlo triangles read from the workbooks; regasification
+# and the combustion range bounds moved onto cited values; pipeline moved onto
+# two converging cited routes; 27 Sep register and method update). The paper
+# reports the central case, the point estimate from the central factor values,
+# with the Monte Carlo 5th to 95th percentile as its interval. The MC median
+# is stated once, with the reason it sits above the central: the stage
+# triangles are right-skewed, shipping 0.05 / 0.12 / 0.31 especially.
 #
 # One decimal on Mt, whole CAD bn. `full` duplicates EXPECTED_LIFETIME_MT /
 # EXPECTED_PEAK_MT / EXPECTED_PEAK_YEAR on purpose: the two locks must agree.
 # SHA-256 of Outputs/paper_set_locked.csv, the rounded canonical copy of the
 # paper set. Re-lock it in the same commit as EXPECTED_BUILD_OUT, never alone.
 EXPECTED_PAPER_SET_SHA256 = (
-    "77d14a4b9f7ae2cc5225a4c4019aba5839c8f4e613dbc911de3d12c96d8d21f9"
+    "bdfe18007c27f578977ac864b4166d02c79b0e3606a75b100fe25901e052334f"
 )
 
 # Figure 10's model well-to-regasification intensity, GWP100, two decimals.
@@ -186,28 +194,28 @@ EXPECTED_WELL_TO_REGAS_T_PER_T = 0.78
 
 EXPECTED_BUILD_OUT = {
     "committed": {
-        "lifetime_mt": 1917.3,
-        "lifetime_co2_only_mt": 1847.2,
-        "peak_year": 2030,
-        "peak_mt": 59.4,
-        "damages_cad_bn": 769,
-        "damages_npv_cad_bn": 539,
+        "lifetime_mt": 2967.4,
+        "lifetime_co2_only_mt": 2858.9,
+        "peak_year": 2033,
+        "peak_mt": 100.9,
+        "damages_cad_bn": 1198,
+        "damages_npv_cad_bn": 834,
     },
     "committed_plus_advanced": {
-        "lifetime_mt": 3914.9,
-        "lifetime_co2_only_mt": 3771.7,
-        "peak_year": 2037,
+        "lifetime_mt": 4080.8,
+        "lifetime_co2_only_mt": 3931.6,
+        "peak_year": 2034,
         "peak_mt": 136.4,
-        "damages_cad_bn": 1620,
-        "damages_npv_cad_bn": 1088,
+        "damages_cad_bn": 1678,
+        "damages_npv_cad_bn": 1137,
     },
     "full": {
-        "lifetime_mt": 7390.3,
-        "lifetime_co2_only_mt": 7124.7,
+        "lifetime_mt": 7556.3,
+        "lifetime_co2_only_mt": 7284.6,
         "peak_year": 2037,
         "peak_mt": 253.4,
-        "damages_cad_bn": 3176,
-        "damages_npv_cad_bn": 2015,
+        "damages_cad_bn": 3234,
+        "damages_npv_cad_bn": 2064,
     },
 }
 

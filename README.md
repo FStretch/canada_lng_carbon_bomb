@@ -13,9 +13,9 @@ construction and proposed. Headline results are the export chain.
 
 **Status.** Submission snapshot for the manuscript *A Canadian Carbon Bomb? The potential lifetime
 emissions and economic damages of Canada's LNG export expansion*, prepared for
-*Environmental Research Letters*. Headline results are locked to the 27 September 2026
-paper set (run 19:03 UTC). The lock includes the 27 September 2026 register and method
-update. Cite the Zenodo DOI of the GitHub release, which is the archival copy.
+*Environmental Research Letters*. Headline results are locked to the 29 September 2026
+paper set (run 14:00 UTC). The lock includes the LNG Canada Phase 2 final investment
+decision of 29 September 2026. Cite the Zenodo DOI of the GitHub release, which is the archival copy.
 
 **Reproduce the locked results.** Python 3.13.0, then `pip install -r requirements.txt`
 and `python build_results.py`.
@@ -78,9 +78,9 @@ sensitivity puts every headline terminal on electric drive:
 
 | case | liquefaction tCO2e/t | lifetime Mt | change | Canada-territorial Mt |
 |---|---|---|---|---|
-| All gas turbine (central) | 0.29 | 7,390.3 | none | 1,344.4 |
-| All electric, Pembina figure (Gorski and Lam 2023) | 0.15 | 7,096.7 | -293.6 (-4.0%) | 1,050.7 |
-| All electric, BC EAO grid-supply figure (best case) | 0.021 | 6,826.2 | -564.2 (-7.6%) | 780.2 |
+| All gas turbine (central) | 0.29 | 7,556.3 | none | 1,374.5 |
+| All electric, Pembina figure (Gorski and Lam 2023) | 0.15 | 7,256.1 | -300.2 (-4.0%) | 1,074.3 |
+| All electric, BC EAO grid-supply figure (best case) | 0.021 | 6,979.5 | -576.8 (-7.6%) | 797.7 |
 
 Every tonne of the change is in Canada, so the Canada-territorial total falls by 22% (Pembina
 figure) to 42% (best case), while the full lifecycle total falls by 4% to 8%. Sources: [Pembina Institute, *Squaring the Circle: State of LNG 2023*](https://www.pembina.org/reports/squaring-the-circle-state-of-lng-2023.pdf);
@@ -140,27 +140,41 @@ Bill C-15 made 50 years the legal maximum CER export licence term on 26 March 20
 (3). The stale fig08 pointer in `build_results.py` now points to the drive sensitivity.
 
 **Still to carry into the manuscript.** The locks, regenerated outputs and version metadata
-were updated with the 27 September 2026 run. The manuscript, SI and report still need these
+were updated with the 29 September 2026 run. The manuscript, SI and report still need these
 numbers. The manuscript's SI Monte Carlo table says liquefaction is "fixed at 0.29" and needs
-the 0.26 / 0.29 / 0.36 triangle instead. When LNG Canada Phase 2 takes its FID, set
-`fid_confirmed` on its row and the delay drops off automatically.
+the 0.26 / 0.29 / 0.36 triangle instead. LNG Canada Phase 2 took its final investment decision
+on 29 September 2026; `fid_confirmed` is set and the delay no longer applies to that row.
+
+## Register update, 29 September 2026
+
+The LNG Canada partners (Shell, PETRONAS, PetroChina, Mitsubishi, KOGAS) took the Phase 2
+final investment decision on 29 September 2026. The row leaves `advanced_proposed` for
+`under_construction` (status `construction`, first export 2031). A Fluor joint venture is
+the engineering, procurement and construction contractor, and Coastal GasLink Phase 2
+proceeds. Committed is now four terminals. Sources are on the register row.
+
+**What the 29 September 2026 run changed.** Export capacity stays 85.55 mtpa. Under
+construction moves from 5.85 to 19.85 mtpa and proposed from 65.7 to 51.7 mtpa (advanced
+26.0 to 12.0; early_proposed stays 39.7). The combustion share in `LOCKED_STAGE_SHARE_PCT`
+moves from 78.1 to 78.0. The territorial shares are unchanged at one decimal
+(18.2 / 3.2 / 78.6). The live paper set is in the next section.
 
 ---
 
 ## What this produces
 
-**The paper set.** Locked 27 September 2026 (run 19:03 UTC). Central case, with the Monte
+**The paper set.** Locked 29 September 2026 (run 14:00 UTC). Central case, with the Monte
 Carlo 5th to 95th percentile as its interval (10,000 draws, seed 20260828). Central is the
 point estimate from the central factor values.
 
 | build-out | lifetime CO2e Mt | lifetime CO2-only Mt | peak | ECCC 2% damages C$bn, valued when caused | ECCC 2% damages C$bn, NPV to 2025 |
 |---|---|---|---|---|---|
-| Committed (operating + under construction, 3 assets) | **1,917.3** [1,890, 2,094] | **1,847.2** [1,803, 1,979] | **59.4** in 2030 [58.5, 64.8] | **769** [755, 830] | **539** |
-| Committed plus advanced (5 assets) | **3,914.9** [3,817, 4,255] | **3,771.7** [3,643, 4,023] | **136.4** in 2037 [134.5, 149.0] | **1,620** [1,576, 1,742] | **1,088** |
-| Full buildout (9 projects, 85.55 mtpa) | **7,390.3** [6,865, 8,284] | **7,124.7** [6,539, 7,849] | **253.4** in 2037 [249.8, 276.4] | **3,176** [2,899, 3,590] | **2,015** |
+| Committed (operating + under construction, 4 assets) | **2,967.4** [2,925, 3,241] | **2,858.9** [2,791, 3,063] | **100.9** in 2033 [99.4, 110.2] | **1,198** [1,176, 1,293] | **834** |
+| Committed plus advanced (5 assets) | **4,080.8** [4,022, 4,457] | **3,931.6** [3,838, 4,212] | **136.4** in 2034 [134.5, 149.0] | **1,678** [1,647, 1,811] | **1,137** |
+| Full buildout (9 projects, 85.55 mtpa) | **7,556.3** [7,076, 8,481] | **7,284.6** [6,741, 8,032] | **253.4** in 2037 [249.8, 276.4] | **3,234** [2,972, 3,659] | **2,064** |
 
 **How the headline is reported.** As the three-point ladder above, with the tier label on each
-figure; the single full-slate number is not fronted alone, since about three quarters of it has
+figure; the single full-slate number is not fronted alone, since about three fifths of it has
 no final investment decision. The Monte Carlo interval on each row is factor uncertainty
 *conditional on that build-out*. It is not the uncertainty on what Canada's expansion will emit:
 that is the spread from the committed row to the full row, about five times wider.
@@ -170,7 +184,7 @@ damage when it is caused, in constant 2025 dollars: the loss-and-damage figure, 
 The NPV discounts the same stream to 2025 at the same 2%: the cost-benefit figure, and the
 aggregation Government of Canada regulatory guidance uses. Wherever one appears, so does the other.
 
-The Monte Carlo median sits above the central case (7,562.4 Mt at full buildout) because the
+The Monte Carlo median sits above the central case (7,759.6 Mt at full buildout) because the
 sampled stage triangles are right-skewed, shipping 0.05 / 0.12 / 0.31 especially. It is stated
 once, with that reason, and is not the reported figure. The upstream triangle high is the GWP20
 scenario factor (0.440), not Howarth 0.55.
@@ -180,15 +194,15 @@ At full buildout:
 | | |
 |---|---|
 | Headline annual (panel peak) | **253.4 MtCO2e** in 2037 |
-| life_average_annual_mt | **222.3 MtCO2e/yr** (not a calendar year) |
-| Lifetime emissions | **7,390.3 MtCO2e** (calendar panel 2025–2069) |
-| Lifetime, CO2 only | **7,124.7 MtCO2** (plus 8,913 kt CH4) |
+| life_average_annual_mt | **230.0 MtCO2e/yr** (not a calendar year) |
+| Lifetime emissions | **7,556.3 MtCO2e** (calendar panel 2025–2069) |
+| Lifetime, CO2 only | **7,284.6 MtCO2** (plus 9,117 kt CH4) |
 | Export capacity | 85.55 mtpa across nine projects |
-| Scope 1 and 2 | 40.5 Mt/yr, 18.2% |
-| Scope 3 | 181.9 Mt/yr, 81.8% |
+| Scope 1 and 2 | 41.8 Mt/yr, 18.2% |
+| Scope 3 | 188.2 Mt/yr, 81.8% |
 
 Split by where the emissions are counted: **18.2% Canada, 3.2% international marine bunkers,
-78.6% foreign**. The CO2-only lifetime is 4.2% of the 170 GtCO2 remaining for 1.5°C.
+78.6% foreign**. The CO2-only lifetime is 4.3% of the 170 GtCO2 remaining for 1.5°C.
 
 Every figure in the paper-set table is locked as `EXPECTED_BUILD_OUT` in `build_results.py` and
 asserted on every run.
@@ -200,7 +214,7 @@ non-export assets totalling 252.1 MtCO2e stay in the register as a stated exclus
 The published lifetime total is the sum of a per-asset, per-calendar-year panel from 2025
 through each asset's last emitting year (currently 2069). It is not duration × life-average.
 The headline annual figure is the panel peak (253.4 MtCO2e in 2037). `life_average_annual_mt`
-(222.3 MtCO2e/yr) is a life-average of utilisation over each facility's operating window,
+(230.0 MtCO2e/yr) is a life-average of utilisation over each facility's operating window,
 including start-up years; it is not a calendar year.
 
 These headlines are below the 9,298.1 Mt / 100.1 mtpa figures that included Discovery LNG as
@@ -462,14 +476,14 @@ America.
 
 **Lifespans are capped at each project's export licence expiry** rather than running a uniform 40
 years. The end year may emit; the year after may not. That cut is 1.8 GtCO2e against the same
-nine assets at a uniform 40 years from first export with no licence stop (9,155.3 Mt versus
-7,390.3 Mt). Anyone comparing versions should treat that as a methodological improvement, not
+nine assets at a uniform 40 years from first export with no licence stop (9,362.7 Mt versus
+7,556.3 Mt). Anyone comparing versions should treat that as a methodological improvement, not
 an error in the lower total. Where a proponent states a different operating life, that is used
 instead: Summit Lake PG LNG states 30 years. Fermeuse's 18 years are derived from the
 developer's resource claim (see Limitations).
 
 Lifetime emissions are also reported as a share of those remaining budgets. The budgets are
-CO2, so the **paper value is the CO2-only lifetime** (7,124.7 MtCO2 at full buildout, 4.2% of
+CO2, so the **paper value is the CO2-only lifetime** (7,284.6 MtCO2 at full buildout, 4.3% of
 the 170 GtCO2 remaining for 1.5°C). That is like for like. The panel carries an explicit
 per-gas split — `co2_mt`, `ch4_derived_co2e_mt` and `ch4_mass_kt` per asset-year, summing to
 `emissions_mtco2e` exactly — built from parameters already on the workbook: upstream CH4 is
@@ -507,7 +521,7 @@ this buildout do, valued as it does it — and it is how Burke et al. (2026) agg
 stream. Discounting each year's damage back to 2025 at the same 2% answers a different question,
 the cost-benefit one — what is the stream worth today, to weigh against benefits also expressed
 today — and it is how the Government of Canada's regulatory guidance aggregates a multi-year
-stream. At full buildout the two are **C$3,176 bn** valued when caused and **C$2,015 bn** as an
+stream. At full buildout the two are **C$3,234 bn** valued when caused and **C$2,064 bn** as an
 NPV to 2025. The paper asks the loss-and-damage question, so the calendar sum is the central; the
 NPV is not a sensitivity on it but the answer to the other question, and the two are carried
 together wherever the total is stated. An earlier note that "the official schedule already embeds
@@ -521,7 +535,7 @@ net loss from that pulse at all, against 0.98 for the United States and China.
 The replication package ships no country-level damages table by pulse year, so
 no 2020-pulse share is available. The Conference
 Board whole-chain GDP figure (Table 1: C$11.153bn/yr in 2020 CAD at 56 mtpa),
-scaled linearly on proposed export nameplate (now 65.7 mtpa) and inflated to
+scaled linearly on proposed export nameplate (now 51.7 mtpa) and inflated to
 2025 CAD, is the Canada denominator.
 
 Damages are priced **per gas**. Each calendar year contributes
@@ -567,7 +581,7 @@ Factors sheets.
   because it hid the dependence of the stored central on the methane share.
 - Shipping is held at 0.12 although the IMO reconstruction gives 0.110.
 - The Conference Board GDP figure is scaled linearly from 56 mtpa to the proposed export
-  nameplate (65.7 mtpa).
+  nameplate (51.7 mtpa).
 - First-export years of 2033 and 2035 are placeholder sensitivity cases, not filed dates.
   Central fill remains 2030.
 - The SI drive sensitivity puts every headline terminal on electric drive. It is a bound, not a
@@ -721,7 +735,7 @@ side, and the peak magnitude as more robust than its timing.
 that is worth.** `Outputs/benchmark_comparison.csv` assembles six boundary-aligned comparisons;
 none shows this model above the external figure. Liquefaction is held at 0.29 against the IEA's
 0.33 global average: adopting the IEA figure would add roughly **84 Mt** to the
-7,390 Mt lifetime. Shipping is held at 0.12 against the IEA's 0.18 to China: adopting that
+7,556 Mt lifetime. Shipping is held at 0.12 against the IEA's 0.18 to China: adopting that
 figure as it stands would add roughly **120 Mt**, and on a per-kilometre basis, since the
 IEA voyage is shorter, the IEA intensity would add closer to **300 Mt**. On the aligned
 well-to-regasification boundary the model is 0.78 tCO2e/t against Roman-White et al.'s expected
@@ -731,8 +745,8 @@ the direction is uniformly conservative, and a reader who prefers the external v
 from the stage series in `Outputs/figure_data/fig01_stage_breakdown.csv`.
 
 **Annual figures come in two forms.** The headline annual is the panel peak (253.4 MtCO2e in
-2037). `life_average_annual_mt` (222.3 MtCO2e/yr) is a life-average across each facility's
-operating window. The published lifetime (7,390.3 MtCO2e) is the sum of the calendar panel
+2037). `life_average_annual_mt` (230.0 MtCO2e/yr) is a life-average across each facility's
+operating window. The published lifetime (7,556.3 MtCO2e) is the sum of the calendar panel
 from 2025 through 2069. Duration × life-average is no longer published.
 
 **One route distance is the west-coast basis rather than a port-specific figure.** Kanata LNG
@@ -847,7 +861,7 @@ Guidelines.
 Code, asset register and results:
 
 > Stretch, F. (2026). *Canada LNG Expansion: Lifecycle Emissions Model*
-> (version 2026.09.27). Zenodo. https://github.com/FStretch/canada_lng_carbon_bomb
+> (version 2026.09.29). Zenodo. https://github.com/FStretch/canada_lng_carbon_bomb
 
 The citable version is the Zenodo record created from the GitHub release. Use the DOI on
 that record in the manuscript data-availability statement.
